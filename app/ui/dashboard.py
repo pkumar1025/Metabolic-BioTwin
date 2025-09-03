@@ -18,6 +18,7 @@ def build_dash_app():
             <title>{%title%}</title>
             {%favicon%}
             {%css%}
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
             <style>
                 body { 
                     font-family: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -211,6 +212,14 @@ def build_dash_app():
                     font-size: 0.65rem;
                     font-weight: 400;
                     line-height: 1.2;
+                }
+                h2.gradient-text {
+                    background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #4b5563 100%) !important;
+                    -webkit-background-clip: text !important;
+                    -webkit-text-fill-color: transparent !important;
+                    background-clip: text !important;
+                    text-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+                    color: transparent !important;
                 }
                 .metric-card {
                     background: white;
@@ -432,6 +441,180 @@ def build_dash_app():
                     50% { transform: scale(1.05); }
                     100% { transform: scale(1); }
                 }
+                .upload-section {
+                    padding: 24px 20px;
+                }
+                .upload-layout {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 24px;
+                    align-items: start;
+                }
+                .upload-area {
+                    width: 100%;
+                    height: 120px;
+                    border-width: 2px;
+                    border-style: dashed;
+                    border-radius: 12px;
+                    text-align: center;
+                    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+                    border-color: #d1d5db;
+                    cursor: pointer;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .upload-area:hover {
+                    border-color: #3b82f6;
+                    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+                }
+                .upload-icon {
+                    font-size: 2rem;
+                    color: #3b82f6;
+                    margin-bottom: 8px;
+                }
+                .upload-title {
+                    margin: 0 0 4px 0;
+                    color: #1f2937;
+                    font-weight: 700;
+                    font-size: 1.2rem;
+                    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                }
+                .upload-subtitle {
+                    margin: 0 0 4px 0;
+                    color: #6b7280;
+                    font-size: 0.95rem;
+                    font-weight: 500;
+                }
+                .upload-hint {
+                    margin: 0;
+                    color: #9ca3af;
+                    font-size: 0.85rem;
+                    font-weight: 400;
+                }
+                .upload-status {
+                    margin-top: 16px;
+                }
+                .upload-side-panel {
+                    background: #f9fafb;
+                    border-radius: 12px;
+                    padding: 20px;
+                    border: 1px solid #e5e7eb;
+                    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+                }
+                .side-panel-title {
+                    margin: 0 0 16px 0;
+                    color: #1f2937;
+                    font-weight: 700;
+                    font-size: 1.1rem;
+                    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                }
+                .side-panel-text {
+                    margin: 0 0 12px 0;
+                    color: #6b7280;
+                    font-size: 0.9rem;
+                    font-weight: 400;
+                    line-height: 1.5;
+                }
+                .format-guide {
+                    margin-top: 16px;
+                    text-align: left;
+                }
+                .format-guide summary {
+                    cursor: pointer;
+                    font-weight: 600;
+                    color: #374151;
+                    font-size: 1.1rem;
+                    font-family: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                }
+                .format-guide-content {
+                    margin-top: 16px;
+                    padding: 20px;
+                    background: #f9fafb;
+                    border-radius: 12px;
+                    border: 1px solid #e5e7eb;
+                    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                }
+                .format-guide-text {
+                    margin: 0 0 16px 0;
+                    color: #6b7280;
+                    font-size: 1rem;
+                    font-weight: 500;
+                }
+                .format-list {
+                    margin: 0;
+                    padding-left: 24px;
+                }
+                .format-list li {
+                    margin: 8px 0;
+                    color: #6b7280;
+                    font-size: 0.95rem;
+                    font-weight: 400;
+                }
+                .demo-section {
+                    text-align: center;
+                }
+                .demo-divider {
+                    margin: 32px 0;
+                    border-color: #e5e7eb;
+                    border-width: 1px;
+                }
+
+                .status-success {
+                    padding: 16px 20px;
+                    background: #f0fdf4;
+                    border: 1px solid #bbf7d0;
+                    border-radius: 12px;
+                    margin-bottom: 16px;
+                    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                }
+                .status-success-icon {
+                    color: #10b981;
+                    margin-right: 12px;
+                    font-size: 1.2rem;
+                }
+                .status-success-text {
+                    color: #10b981;
+                    font-weight: 600;
+                    font-size: 1rem;
+                    font-family: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                }
+                .status-info {
+                    padding: 12px 16px;
+                    background: #f9fafb;
+                    border-radius: 8px;
+                    border: 1px solid #e5e7eb;
+                    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                }
+                .status-info-text {
+                    margin: 0;
+                    color: #6b7280;
+                    font-size: 0.95rem;
+                    font-weight: 400;
+                    font-family: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                }
+                .status-error {
+                    padding: 16px 20px;
+                    background: #fef2f2;
+                    border: 1px solid #fecaca;
+                    border-radius: 12px;
+                    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                }
+                .status-error-icon {
+                    color: #ef4444;
+                    margin-right: 12px;
+                    font-size: 1.2rem;
+                }
+                .status-error-text {
+                    color: #ef4444;
+                    font-weight: 600;
+                    font-size: 1rem;
+                    font-family: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                }
                 .success-message {
                     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
                     color: white;
@@ -485,6 +668,26 @@ def build_dash_app():
                     .metric-value {
                         font-size: 2rem;
                     }
+                    .upload-layout {
+                        grid-template-columns: 1fr;
+                        gap: 16px;
+                    }
+                    .upload-area {
+                        height: 100px;
+                        line-height: 100px;
+                    }
+                    .upload-icon {
+                        font-size: 1.5rem;
+                    }
+                    .upload-title {
+                        font-size: 1rem;
+                    }
+                    .upload-subtitle {
+                        font-size: 0.85rem;
+                    }
+                    .upload-hint {
+                        font-size: 0.8rem;
+                    }
                 }
                 @media (max-width: 480px) {
                     .header h1 {
@@ -515,14 +718,69 @@ def build_dash_app():
             # Header
             html.Div([
                 html.Div([
-                    html.H1("Metabolic BioTwin", className="header-compact"),
-                    html.P("Your Personal Health Intelligence Platform", className="header-compact tagline"),
+                    html.Div([
+                        html.I(className="fas fa-heartbeat", style={"fontSize":"4.5rem", "color":"#10b981", "marginRight":"24px", "marginBottom":"8px"}),
+                        html.Div([
+                            html.H1("Metabolic BioTwin", className="header-compact"),
+                            html.P("Your Personal Health Intelligence Platform", className="header-compact tagline"),
+                        ])
+                    ], style={"display":"flex", "alignItems":"center", "justifyContent":"center"}),
                 ], style={"textAlign":"center", "position":"relative", "zIndex":"1"}),
                 dcc.Store(id="session-id", data=None),
             ], className="header"),
 
+            # Problem Statement & Solution
+            html.Div([
+                html.Div([
+                    html.H2("Unifying Metabolic Health Data", 
+                           style={"textAlign":"center", "marginBottom":"32px", "marginTop":"0", "fontSize":"1.8rem", "fontWeight":"700", "color":"#1f2937", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"}),
+                    
+                    html.Div([
+                        html.Div([
+                            html.H3("The Problem", style={"color":"#dc2626", "fontSize":"1.2rem", "fontWeight":"600", "marginBottom":"8px", "marginTop":"0", "textAlign":"center"}),
+                            html.P("Metabolic health data is scattered across glucose monitors, fitness trackers, and nutrition apps, making it impossible to understand how sleep, diet, and exercise impact your glucose response and metabolic function.", 
+                                   style={"color":"#6b7280", "fontSize":"0.95rem", "lineHeight":"1.5", "margin":"0"})
+                        ], style={"flex":"1", "padding":"16px 20px 20px 20px", "background":"#fef2f2", "borderRadius":"8px", "border":"1px solid #fecaca"}),
+                        
+                        html.Div([
+                            html.H3("What Metabolic BioTwin Does", style={"color":"#059669", "fontSize":"1.2rem", "fontWeight":"600", "marginBottom":"8px", "marginTop":"0", "textAlign":"center"}),
+                            html.P("AI-powered platform that unifies metabolic data streams to predict glucose responses, discover hidden correlations between lifestyle factors and metabolic health, and provide personalized insights for optimal metabolic function.", 
+                                   style={"color":"#6b7280", "fontSize":"0.95rem", "lineHeight":"1.5", "margin":"0"})
+                        ], style={"flex":"1", "padding":"16px 20px 20px 20px", "background":"#f0fdf4", "borderRadius":"8px", "border":"1px solid #bbf7d0"})
+                    ], style={"display":"flex", "gap":"20px", "marginBottom":"24px"}),
+                    
+                    html.Div([
+                        html.Div([
+                            html.I(className="fas fa-brain", style={"fontSize":"1.5rem", "color":"#3b82f6", "marginBottom":"8px", "marginTop":"0"}),
+                            html.H4("AI Correlation Discovery", style={"fontSize":"1rem", "fontWeight":"600", "color":"#1f2937", "marginBottom":"4px", "marginTop":"0"}),
+                            html.P("Discover metabolic correlations like 'Poor sleep increases your glucose spike by 40% after high-carb meals'", 
+                                   style={"fontSize":"0.85rem", "color":"#6b7280", "lineHeight":"1.4", "margin":"0"})
+                        ], style={"textAlign":"center", "padding":"12px 16px 16px 16px", "background":"white", "borderRadius":"8px", "boxShadow":"0 1px 3px rgba(0, 0, 0, 0.1)", "border":"1px solid #e5e7eb", "flex":"1"}),
+                        
+                        html.Div([
+                            html.I(className="fas fa-chart-line", style={"fontSize":"1.5rem", "color":"#10b981", "marginBottom":"8px", "marginTop":"0"}),
+                            html.H4("Unified Dashboard", style={"fontSize":"1rem", "fontWeight":"600", "color":"#1f2937", "marginBottom":"4px", "marginTop":"0"}),
+                            html.P("Visualize how sleep quality affects your glucose response and metabolic recovery patterns", 
+                                   style={"fontSize":"0.85rem", "color":"#6b7280", "lineHeight":"1.4", "margin":"0"})
+                        ], style={"textAlign":"center", "padding":"12px 16px 16px 16px", "background":"white", "borderRadius":"8px", "boxShadow":"0 1px 3px rgba(0, 0, 0, 0.1)", "border":"1px solid #e5e7eb", "flex":"1"}),
+                        
+                        html.Div([
+                            html.I(className="fas fa-exclamation-triangle", style={"fontSize":"1.5rem", "color":"#f59e0b", "marginBottom":"8px", "marginTop":"0"}),
+                            html.H4("Smart Alerts", style={"fontSize":"1rem", "fontWeight":"600", "color":"#1f2937", "marginBottom":"4px", "marginTop":"0"}),
+                            html.P("Get metabolic alerts like 'Your glucose variability has increased 25% - consider adjusting meal timing'", 
+                                   style={"fontSize":"0.85rem", "color":"#6b7280", "lineHeight":"1.4", "margin":"0"})
+                        ], style={"textAlign":"center", "padding":"12px 16px 16px 16px", "background":"white", "borderRadius":"8px", "boxShadow":"0 1px 3px rgba(0, 0, 0, 0.1)", "border":"1px solid #e5e7eb", "flex":"1"})
+                    ], style={"display":"flex", "gap":"16px"})
+                ], style={"maxWidth":"1000px", "margin":"0 auto", "padding":"20px 20px"})
+            ], style={"background":"#f8fafc", "borderBottom":"1px solid #e5e7eb"}),
+
             # Summary Metrics
-            html.Div(id="summary-metrics", className="summary-grid"),
+            html.Div([
+                html.Div([
+                    html.H2("Health Summary", className="gradient-text", style={"textAlign":"center", "marginBottom":"0px", "fontSize":"2.2rem", "fontWeight":"800", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "letterSpacing":"-0.02em"})
+                ], style={"padding":"4px 0 2px 0"}),
+                html.Div(id="summary-metrics", className="summary-grid")
+            ], id="summary-section", style={"display":"none"}),
 
             # Tabs
             html.Div([
@@ -533,46 +791,143 @@ def build_dash_app():
                         dcc.Tab(label="Timeline", value="timeline", className="tab"),
                         dcc.Tab(label="Meals", value="meals", className="tab"),
                         dcc.Tab(label="Insights", value="insights", className="tab"),
+                        dcc.Tab(label="Health Score", value="health-score", className="tab"),
+                        dcc.Tab(label="Predictions", value="predictions", className="tab"),
+                        dcc.Tab(label="Correlations", value="correlations", className="tab"),
                     ],
                     className="tabs-container"
                 ),
                 html.Div(id="tab-content", className="tab-content"),
             ]),
-            # Get Started Button Section (integrated with the journey section)
+            # Data Upload Section (Always Visible)
             html.Div([
-                html.Button("Get Started", id="btn-demo", className="btn-primary"),
-                html.P("Click to explore with sample health data", 
-                       style={"margin":"12px 0 0 0", "color":"#6b7280", "fontSize":"0.9rem", "fontFamily":"'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "fontWeight":"400"}),
-                html.Div(id="ingest-status", style={"marginTop":"8px", "color":"#374151", "fontWeight":"500", "fontSize":"0.9rem"})
-            ], id="get-started-section", style={"textAlign":"center", "padding":"20px 0", "display":"none"}),
+                # Main Upload Layout
+                html.Div([
+                    # Left Side - Upload Area
+                    html.Div([
+                        dcc.Upload(
+                            id='upload-data',
+                            children=html.Div([
+                                html.I(className="fas fa-cloud-upload-alt upload-icon"),
+                                html.H3("Upload Your Health Data", className="upload-title"),
+                                html.P("Drag & drop CSV files or click to browse", className="upload-subtitle")
+                            ]),
+                            className="upload-area",
+                            multiple=True
+                        ),
+                        
+                        # Upload Status
+                        html.Div(id="upload-status", className="upload-status"),
+                        
+                        # Demo Button
+                        html.Div([
+                            html.Hr(className="demo-divider"),
+                            html.Button("Get Started with Demo Data", id="btn-demo", className="btn-primary"),
+                            html.Div(id="ingest-status", style={"marginTop":"12px", "color":"#374151", "fontWeight":"500", "fontSize":"0.95rem"}),
+                            html.Div(id="loading-indicator", style={"marginTop":"12px", "display":"none"})
+                        ], className="demo-section")
+                    ]),
+                    
+                    # Right Side - Info Panel
+                    html.Div([
+                        html.H3("How It Works", className="side-panel-title"),
+                        html.P("Upload your metabolic data from glucose monitors, fitness trackers, and nutrition apps to get personalized AI insights.", className="side-panel-text"),
+                        html.P("Our system automatically detects and processes different data formats from glucose monitors, fitness trackers, and nutrition apps.", className="side-panel-text"),
+                        
+                        # Data Format Guide
+                        html.Details([
+                            html.Summary("📋 Supported Data Formats"),
+                            html.Div([
+                                html.P("Upload CSV files with health data. Supported formats:", className="format-guide-text"),
+                                html.Ul([
+                                    html.Li("🍽️ Meals: date, time, carbs_g, protein_g, fat_g"),
+                                    html.Li("😴 Sleep: date, sleep_hours, bedtime, wake_time"),
+                                    html.Li("🏃 Activity: date, steps, workout_min, hydration_l"),
+                                    html.Li("💓 Vitals: date, fg_fast_mgdl, weight, bp_systolic")
+                                ], className="format-list")
+                            ], className="format-guide-content")
+                        ], className="format-guide")
+                    ], className="upload-side-panel")
+                ], className="upload-layout")
+            ], className="upload-section"),
 
         ], className="main-container"),
         dcc.Download(id="download-meals")
     ])
 
     @callback(
-        Output("get-started-section","style"),
-        Input("session-id","data")
+        Output("upload-status","children"),
+        Input("upload-data","contents"),
+        prevent_initial_call=True
     )
-    def toggle_get_started_button(sid):
-        if sid:
-            return {"textAlign":"center", "padding":"20px 0", "display":"none"}
-        else:
-            return {"textAlign":"center", "padding":"20px 0", "display":"block"}
+    def handle_file_upload(contents):
+        if not contents:
+            return ""
+        
+        import base64
+        import io
+        import pandas as pd
+        
+        try:
+            # Process uploaded files
+            files_processed = []
+            for content in contents:
+                content_type, content_string = content.split(',')
+                decoded = base64.b64decode(content_string)
+                
+                # Try to read as CSV
+                df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
+                files_processed.append({
+                    'rows': len(df),
+                    'columns': list(df.columns)
+                })
+            
+            return html.Div([
+                html.Div([
+                    html.I(className="fas fa-check-circle status-success-icon"),
+                    html.Span(f"Successfully uploaded {len(files_processed)} file(s)", className="status-success-text")
+                ], className="status-success"),
+                
+                html.Div([
+                    html.P("Files ready for processing. Click 'Get Started with Demo Data' to see the system in action.", className="status-info-text")
+                ], className="status-info")
+            ])
+            
+        except Exception as e:
+            return html.Div([
+                html.Div([
+                    html.I(className="fas fa-exclamation-triangle status-error-icon"),
+                    html.Span(f"Error processing files: {str(e)}", className="status-error-text")
+                ], className="status-error")
+            ])
 
     @callback(
-        Output("session-id","data"), Output("ingest-status","children"),
+        Output("session-id","data"), Output("ingest-status","children"), Output("loading-indicator","children"), Output("loading-indicator","style"),
         Input("btn-demo","n_clicks"), prevent_initial_call=True
     )
     def load_demo(_):
+        # Show loading state
+        loading_style = {"marginTop":"8px", "display":"block", "color":"#3b82f6", "fontWeight":"500", "fontSize":"0.9rem"}
+        loading_content = html.Div([
+            html.Span("⏳", style={"marginRight":"8px"}),
+            "Loading demo data...",
+            html.Div(className="loading-spinner", style={"display":"inline-block", "marginLeft":"8px"})
+        ])
+        
+        import time
+        time.sleep(0.5)  # Brief loading simulation
         r = requests.post("http://localhost:8000/api/ingest", data={"use_demo": "true"})
         js = r.json()
-        return js["session_id"], f"✅ Loaded demo data: {js['rows_daily']} days, {js['rows_meals']} meals"
+        
+        # Hide loading indicator
+        loading_style_hidden = {"marginTop":"8px", "display":"none"}
+        
+        return js["session_id"], f"✅ Loaded demo data: {js['rows_daily']} days, {js['rows_meals']} meals", "", loading_style_hidden
 
 
 
     @callback(
-        Output("summary-metrics","children"),
+        Output("summary-metrics","children"), Output("summary-section","style"),
         Input("session-id","data")
     )
     def update_summary_metrics(sid):
@@ -600,7 +955,7 @@ def build_dash_app():
                         ], style={"display":"grid", "gridTemplateColumns":"repeat(auto-fit, minmax(250px, 1fr))", "gap":"24px", "marginTop":"32px", "maxWidth":"900px", "marginLeft":"auto", "marginRight":"auto"})
                     ], style={"textAlign":"center", "padding":"10px 15px", "background":"white", "borderRadius":"16px", "boxShadow":"0 4px 6px -1px rgba(0, 0, 0, 0.1)"})
                 ], className="summary-grid")
-            ])
+            ]), {"display":"none"}
         
         try:
             # Get timeline data for summary
@@ -683,9 +1038,9 @@ def build_dash_app():
                         html.Div(style={"width": "100%", "height": "100%"}, className="progress-fill")
                     ], className="progress-bar")
                 ], className="metric-card"),
-            ])
+            ]), {"display":"block"}
         except:
-            return html.Div("Error loading summary metrics.", style={"textAlign":"center","color":"#ef4444","padding":"40px"})
+            return html.Div("Error loading summary metrics.", style={"textAlign":"center","color":"#ef4444","padding":"40px"}), {"display":"none"}
 
     @callback(Output("tab-content","children"),
               Input("tabs","value"), State("session-id","data"))
@@ -710,9 +1065,9 @@ def build_dash_app():
                                     html.Div("", style={"width":"16px", "height":"16px", "background":"linear-gradient(45deg, #10b981 0%, #3b82f6 100%)", "borderRadius":"50%", "margin":"0 auto"})
                                 ], style={"width":"80px", "height":"80px", "background":"linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%)", "borderRadius":"50%", "margin":"0 auto 24px auto", "display":"flex", "flexDirection":"column", "alignItems":"center", "justifyContent":"center", "boxShadow":"0 0 30px rgba(59, 130, 246, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.1)", "border":"2px solid rgba(59, 130, 246, 0.2)"}),
                                 
-                                html.H4("Start Your Health Journey", 
+                                html.H4("Start Your Metabolic Health Journey", 
                                         style={"margin":"0 0 16px 0", "color":"#1f2937", "fontWeight":"800", "fontSize":"1.6rem", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "textAlign":"center", "letterSpacing":"-0.03em", "background":"linear-gradient(135deg, #1f2937 0%, #374151 100%)", "WebkitBackgroundClip":"text", "WebkitTextFillColor":"transparent", "backgroundClip":"text"}),
-                                html.P("Transform your health data into actionable insights with AI-powered analysis.", 
+                                html.P("Predict your glucose response and optimize metabolic health with AI-powered analysis.", 
                                        style={"margin":"0 0 32px 0", "color":"#6b7280", "fontSize":"1.05rem", "fontFamily":"'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "textAlign":"center", "lineHeight":"1.7", "maxWidth":"480px", "margin":"0 auto 32px auto", "fontWeight":"500"}),
 
                             ], style={"position":"relative", "zIndex":"2", "padding":"40px 32px", "textAlign":"center"})
@@ -721,7 +1076,11 @@ def build_dash_app():
                 ], style={"textAlign":"center"})
             ])
         if tab == "timeline":
-            tj = requests.get("http://localhost:8000/api/timeline", params={"session_id": sid}).json()
+            try:
+                tj = requests.get("http://localhost:8000/api/timeline", params={"session_id": sid}).json()
+            except:
+                return html.Div("Error loading timeline data.", style={"textAlign":"center","color":"#ef4444","padding":"40px"})
+            
             # Build simple 7-day moving averages (ignore zeros as missing)
             def moving_avg(values, window=7):
                 vals = [None if (v is None or (isinstance(v, (int,float)) and v == 0)) else float(v) for v in values]
@@ -731,19 +1090,42 @@ def build_dash_app():
                     window_vals = [v for v in vals[start:i+1] if v is not None]
                     out.append(sum(window_vals)/len(window_vals) if window_vals else None)
                 return out
+            
             fg = tj["fg_fast_mgdl"]
             sleep = tj["sleep_hours"]
             fg_ma = moving_avg(fg, 7)
             sleep_ma = moving_avg(sleep, 7)
-
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(x=tj["dates"], y=fg, name="Fasting Glucose (mg/dL)", mode="lines", line=dict(color="#2563eb", width=1.5)))
-            fig.add_trace(go.Scatter(x=tj["dates"], y=fg_ma, name="FG 7-day avg", mode="lines", line=dict(color="#1d4ed8", width=3)))
-            fig.add_trace(go.Scatter(x=tj["dates"], y=sleep, name="Sleep (h)", yaxis="y2", mode="lines", line=dict(color="#dc2626", width=1.5)))
-            fig.add_trace(go.Scatter(x=tj["dates"], y=sleep_ma, name="Sleep 7-day avg", yaxis="y2", mode="lines", line=dict(color="#b91c1c", width=3)))
-            fig.update_layout(
-                height=500,
-                margin=dict(l=60,r=60,t=40,b=40),
+            
+            # Create two separate charts for better visualization
+            # Chart 1: Fasting Glucose
+            fig1 = go.Figure()
+            fig1.add_trace(go.Scatter(
+                x=tj["dates"], 
+                y=fg, 
+                name="Daily Fasting Glucose", 
+                mode="lines+markers", 
+                line=dict(color="#ef4444", width=2),
+                marker=dict(size=4, color="#ef4444"),
+                opacity=0.7
+            ))
+            fig1.add_trace(go.Scatter(
+                x=tj["dates"], 
+                y=fg_ma, 
+                name="7-Day Average", 
+                mode="lines", 
+                line=dict(color="#dc2626", width=4),
+                opacity=0.9
+            ))
+            
+            # Add optimal range shading
+            fig1.add_hrect(y0=80, y1=100, fillcolor="rgba(34, 197, 94, 0.1)", 
+                          annotation_text="Optimal Range (80-100 mg/dL)", 
+                          annotation_position="top left",
+                          line_width=0)
+            
+            fig1.update_layout(
+                height=400,
+                margin=dict(l=60, r=30, t=60, b=50),
                 template="plotly_white",
                 hovermode="x unified",
                 legend=dict(
@@ -752,12 +1134,11 @@ def build_dash_app():
                     y=1.02, 
                     xanchor="center", 
                     x=0.5,
-                    bgcolor="rgba(255,255,255,0.8)",
+                    bgcolor="rgba(255,255,255,0.9)",
                     bordercolor="rgba(0,0,0,0.1)",
                     borderwidth=1
                 ),
                 xaxis=dict(
-                    rangeslider=dict(visible=True, thickness=0.1),
                     showgrid=True,
                     gridcolor="rgba(0,0,0,0.05)",
                     title="Date",
@@ -768,27 +1149,112 @@ def build_dash_app():
                     titlefont=dict(size=14, color="#374151"),
                     showgrid=True,
                     gridcolor="rgba(0,0,0,0.05)",
-                    zeroline=False
-                ),
-                yaxis2=dict(
-                    title="Sleep (hours)",
-                    titlefont=dict(size=14, color="#374151"),
-                    overlaying="y", 
-                    side="right", 
-                    showgrid=False,
-                    zeroline=False
+                    zeroline=False,
+                    range=[70, 120]
                 ),
                 plot_bgcolor="rgba(0,0,0,0)",
                 paper_bgcolor="rgba(0,0,0,0)",
                 font=dict(family="Inter, sans-serif", size=12),
                 title=dict(
-                    text="Health Trends Over Time",
-                    font=dict(size=18, color="#1f2937"),
+                    text="Fasting Glucose Trends",
+                    font=dict(size=16, color="#1f2937"),
                     x=0.5,
                     xanchor="center"
                 )
             )
-            return html.Div([dcc.Graph(figure=fig)])
+            
+            # Chart 2: Sleep Hours
+            fig2 = go.Figure()
+            fig2.add_trace(go.Scatter(
+                x=tj["dates"], 
+                y=sleep, 
+                name="Daily Sleep", 
+                mode="lines+markers", 
+                line=dict(color="#3b82f6", width=2),
+                marker=dict(size=4, color="#3b82f6"),
+                opacity=0.7
+            ))
+            fig2.add_trace(go.Scatter(
+                x=tj["dates"], 
+                y=sleep_ma, 
+                name="7-Day Average", 
+                mode="lines", 
+                line=dict(color="#1d4ed8", width=4),
+                opacity=0.9
+            ))
+            
+            # Add optimal sleep range shading
+            fig2.add_hrect(y0=7, y1=9, fillcolor="rgba(34, 197, 94, 0.1)", 
+                          annotation_text="Optimal Range (7-9 hours)", 
+                          annotation_position="top left",
+                          line_width=0)
+            
+            fig2.update_layout(
+                height=400,
+                margin=dict(l=60, r=30, t=60, b=50),
+                template="plotly_white",
+                hovermode="x unified",
+                legend=dict(
+                    orientation="h", 
+                    yanchor="bottom", 
+                    y=1.02, 
+                    xanchor="center", 
+                    x=0.5,
+                    bgcolor="rgba(255,255,255,0.9)",
+                    bordercolor="rgba(0,0,0,0.1)",
+                    borderwidth=1
+                ),
+                xaxis=dict(
+                    showgrid=True,
+                    gridcolor="rgba(0,0,0,0.05)",
+                    title="Date",
+                    titlefont=dict(size=14, color="#374151")
+                ),
+                yaxis=dict(
+                    title="Sleep Hours",
+                    titlefont=dict(size=14, color="#374151"),
+                    showgrid=True,
+                    gridcolor="rgba(0,0,0,0.05)",
+                    zeroline=False,
+                    range=[5, 10]
+                ),
+                plot_bgcolor="rgba(0,0,0,0)",
+                paper_bgcolor="rgba(0,0,0,0)",
+                font=dict(family="Inter, sans-serif", size=12),
+                title=dict(
+                    text="Sleep Quality Trends",
+                    font=dict(size=16, color="#1f2937"),
+                    x=0.5,
+                    xanchor="center"
+                )
+            )
+            
+            # Add correlation insight
+            correlation_text = ""
+            if len(fg) > 10 and len(sleep) > 10:
+                # Calculate simple correlation
+                import numpy as np
+                fg_clean = [float(x) for x in fg if x and x != 0]
+                sleep_clean = [float(x) for x in sleep if x and x != 0]
+                if len(fg_clean) == len(sleep_clean) and len(fg_clean) > 10:
+                    corr = np.corrcoef(fg_clean, sleep_clean)[0, 1]
+                    if abs(corr) > 0.3:
+                        direction = "inversely" if corr < 0 else "positively"
+                        strength = "strong" if abs(corr) > 0.7 else "moderate" if abs(corr) > 0.5 else "weak"
+                        correlation_text = f"💡 Insight: Sleep and glucose show {strength} {direction} correlation (r={corr:.2f})"
+            
+            return html.Div([
+                html.Div([
+                    html.H3("Health Trends Over Time", style={"textAlign":"center", "marginBottom":"16px", "color":"#1f2937", "fontSize":"2.2rem", "fontWeight":"800", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "letterSpacing":"-0.02em"}),
+                    html.P("Track your key health metrics and discover patterns in your data", style={"textAlign":"center", "marginBottom":"32px", "color":"#6b7280", "fontSize":"1.1rem", "fontFamily":"'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "fontWeight":"500"})
+                ], style={"padding":"32px 0 24px 0"}),
+                dcc.Graph(figure=fig1, id="glucose-chart", key=f"glucose-{sid}", config={'displayModeBar': True, 'displaylogo': False}),
+                html.Div(style={"height":"24px"}),  # Spacing
+                dcc.Graph(figure=fig2, id="sleep-chart", key=f"sleep-{sid}", config={'displayModeBar': True, 'displaylogo': False}),
+                html.Div([
+                    html.P(correlation_text, style={"textAlign":"center", "marginTop":"24px", "color":"#059669", "fontSize":"1rem", "fontWeight":"600", "padding":"16px 20px", "background":"rgba(16, 185, 129, 0.1)", "borderRadius":"16px", "border":"1px solid rgba(16, 185, 129, 0.2)"})
+                ]) if correlation_text else html.Div()
+            ])
         if tab == "meals":
             mj = requests.get("http://localhost:8000/api/meals", params={"session_id": sid}).json()
             if not mj["meals"]:
@@ -930,6 +1396,201 @@ def build_dash_app():
                 
                 cards.append(html.Div([header, *meta], className=card_class))
             return html.Div(cards)
+        
+        if tab == "health-score":
+            try:
+                hs = requests.get("http://localhost:8000/api/health-score", params={"session_id": sid}).json()
+                
+                if "error" in hs:
+                    return html.Div(f"Error: {hs['error']}", style={"textAlign":"center","color":"#ef4444","padding":"40px"})
+                
+                scores = hs.get("scores", {})
+                recommendations = hs.get("recommendations", [])
+                
+                # Health Score Cards
+                score_cards = []
+                for category, data in scores.items():
+                    if category == "overall":
+                        continue
+                    
+                    score = data.get("score", 0)
+                    interpretation = data.get("interpretation", "")
+                    trend = data.get("trend", "stable")
+                    
+                    trend_icon = "📈" if trend == "improving" else "📉" if trend == "declining" else "➡️"
+                    trend_color = "#10b981" if trend == "improving" else "#ef4444" if trend == "declining" else "#6b7280"
+                    
+                    score_cards.append(html.Div([
+                        html.H4(category.replace("_", " ").title(), style={"margin":"0 0 8px 0", "fontSize":"1.2rem", "fontWeight":"600"}),
+                        html.H2(f"{score}", style={"margin":"0 0 8px 0", "fontSize":"2.5rem", "fontWeight":"800", "color":"#1e3a8a"}),
+                        html.P(interpretation, style={"margin":"0 0 8px 0", "color":"#6b7280", "fontSize":"0.9rem"}),
+                        html.Div([
+                            html.Span(trend_icon),
+                            html.Span(f" {trend.upper()}", style={"color": trend_color, "fontWeight":"600", "marginLeft":"4px"})
+                        ], style={"fontSize":"0.8rem"})
+                    ], className="metric-card", style={"textAlign":"center", "padding":"20px"}))
+                
+                # Overall Score
+                overall_data = scores.get("overall", {})
+                overall_score = overall_data.get("score", 0)
+                overall_grade = overall_data.get("grade", "N/A")
+                overall_interpretation = overall_data.get("interpretation", "")
+                
+                overall_card = html.Div([
+                    html.H3("Overall Health Score", style={"margin":"0 0 16px 0", "fontSize":"1.5rem", "fontWeight":"700", "textAlign":"center"}),
+                    html.Div([
+                        html.H1(f"{overall_score}", style={"margin":"0", "fontSize":"4rem", "fontWeight":"900", "color":"#1e3a8a"}),
+                        html.H2(f"Grade: {overall_grade}", style={"margin":"8px 0", "fontSize":"2rem", "fontWeight":"700", "color":"#059669"})
+                    ], style={"textAlign":"center", "marginBottom":"16px"}),
+                    html.P(overall_interpretation, style={"margin":"0", "color":"#6b7280", "fontSize":"1rem", "textAlign":"center", "lineHeight":"1.5"})
+                ], className="metric-card", style={"textAlign":"center", "padding":"30px", "background":"linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)", "border":"2px solid #3b82f6"})
+                
+                # Recommendations
+                rec_cards = []
+                for rec in recommendations:
+                    priority_color = "#ef4444" if rec["priority"] == "high" else "#f59e0b" if rec["priority"] == "medium" else "#10b981"
+                    rec_cards.append(html.Div([
+                        html.Div([
+                            html.H4(rec["title"], style={"margin":"0 0 8px 0", "fontSize":"1.3rem", "fontWeight":"600"}),
+                            html.Span(rec["priority"].upper(), style={"background": priority_color, "color":"white", "padding":"4px 8px", "borderRadius":"12px", "fontSize":"0.7rem", "fontWeight":"600"})
+                        ], style={"display":"flex", "justifyContent":"space-between", "alignItems":"center", "marginBottom":"12px"}),
+                        html.P(rec["description"], style={"margin":"0 0 12px 0", "color":"#6b7280", "fontSize":"0.95rem"}),
+                        html.Ul([html.Li(action, style={"marginBottom":"4px", "fontSize":"0.9rem"}) for action in rec["actions"]], style={"margin":"0 0 12px 0", "paddingLeft":"20px"}),
+                        html.P(rec["expected_impact"], style={"margin":"0", "color":"#059669", "fontSize":"0.85rem", "fontWeight":"500", "fontStyle":"italic"})
+                    ], className="insight-card", style={"marginBottom":"16px"}))
+                
+                return html.Div([
+                    overall_card,
+                    html.Div(score_cards, style={"display":"grid", "gridTemplateColumns":"repeat(auto-fit, minmax(200px, 1fr))", "gap":"16px", "margin":"20px 0"}),
+                    html.H3("Personalized Recommendations", style={"margin":"20px 0 16px 0", "fontSize":"1.5rem", "fontWeight":"700"}),
+                    html.Div(rec_cards)
+                ])
+            except Exception as e:
+                return html.Div(f"Error loading health score: {str(e)}", style={"textAlign":"center","color":"#ef4444","padding":"40px"})
+        
+        if tab == "predictions":
+            try:
+                pred = requests.get("http://localhost:8000/api/predictions", params={"session_id": sid}).json()
+                
+                # Glucose Prediction
+                glucose_pred = pred.get("glucose_prediction", {})
+                sleep_pred = pred.get("sleep_impact", {})
+                forecast = pred.get("health_forecast", {})
+                
+                cards = []
+                
+                if "error" not in glucose_pred:
+                    model_perf = glucose_pred.get("model_performance", {})
+                    feature_imp = glucose_pred.get("feature_importance", {})
+                    
+                    cards.append(html.Div([
+                        html.H4("Glucose Response Prediction Model", style={"margin":"0 0 16px 0", "fontSize":"1.3rem", "fontWeight":"600"}),
+                        html.Div([
+                            html.Div([
+                                html.H5("Model Performance", style={"margin":"0 0 8px 0", "fontSize":"1.1rem", "fontWeight":"600"}),
+                                html.P(f"R² Score: {model_perf.get('r2_score', 0):.3f}", style={"margin":"4px 0", "fontSize":"0.9rem"}),
+                                html.P(f"MAE: {model_perf.get('mae', 0):.1f}", style={"margin":"4px 0", "fontSize":"0.9rem"}),
+                                html.P(f"Samples: {model_perf.get('n_samples', 0)}", style={"margin":"4px 0", "fontSize":"0.9rem"})
+                            ], style={"flex":"1", "padding":"12px"}),
+                            html.Div([
+                                html.H5("Top Predictors", style={"margin":"0 0 8px 0", "fontSize":"1.1rem", "fontWeight":"600"}),
+                                *[html.P(f"{k}: {v:.3f}", style={"margin":"2px 0", "fontSize":"0.85rem"}) for k, v in sorted(feature_imp.items(), key=lambda x: x[1], reverse=True)[:5]]
+                            ], style={"flex":"1", "padding":"12px"})
+                        ], style={"display":"flex", "gap":"16px"})
+                    ], className="insight-card"))
+                
+                if "error" not in sleep_pred:
+                    scenarios = sleep_pred.get("scenario_predictions", [])
+                    if scenarios:
+                        scenario_data = []
+                        for scenario in scenarios:
+                            scenario_data.append({
+                                "Sleep Hours": scenario["sleep_hours"],
+                                "Predicted FG": f"{scenario['predicted_fg']:.1f} mg/dL",
+                                "HRV": scenario["hrv"],
+                                "RHR": scenario["rhr"]
+                            })
+                        
+                        table = dash_table.DataTable(
+                            columns=[{"name": k, "id": k} for k in scenario_data[0].keys()],
+                            data=scenario_data,
+                            style_table={"overflowX": "auto"},
+                            style_header={"backgroundColor": "#f8fafc", "fontWeight": "600"},
+                            style_cell={"textAlign": "center", "padding": "8px"}
+                        )
+                        
+                        cards.append(html.Div([
+                            html.H4("Sleep Impact Predictions", style={"margin":"0 0 16px 0", "fontSize":"1.3rem", "fontWeight":"600"}),
+                            html.P("How different sleep scenarios affect next-day fasting glucose:", style={"margin":"0 0 12px 0", "color":"#6b7280"}),
+                            table
+                        ], className="insight-card"))
+                
+                if forecast:
+                    forecast_cards = []
+                    for metric, data in forecast.items():
+                        current = data.get("current_value", 0)
+                        trend = data.get("trend", 0)
+                        forecast_vals = data.get("forecast", [])
+                        
+                        if forecast_vals:
+                            forecast_cards.append(html.Div([
+                                html.H5(metric.replace("_", " ").title(), style={"margin":"0 0 8px 0", "fontSize":"1.1rem", "fontWeight":"600"}),
+                                html.P(f"Current: {current:.1f}", style={"margin":"4px 0", "fontSize":"0.9rem"}),
+                                html.P(f"Trend: {trend:+.1f}", style={"margin":"4px 0", "fontSize":"0.9rem", "color":"#10b981" if trend > 0 else "#ef4444" if trend < 0 else "#6b7280"}),
+                                html.P(f"7-day forecast: {forecast_vals[-1]['predicted_value']:.1f}", style={"margin":"4px 0", "fontSize":"0.9rem", "fontWeight":"500"})
+                            ], style={"padding":"12px", "background":"#f8fafc", "borderRadius":"8px", "border":"1px solid #e2e8f0"}))
+                    
+                    if forecast_cards:
+                        cards.append(html.Div([
+                            html.H4("7-Day Health Forecast", style={"margin":"0 0 16px 0", "fontSize":"1.3rem", "fontWeight":"600"}),
+                            html.Div(forecast_cards, style={"display":"grid", "gridTemplateColumns":"repeat(auto-fit, minmax(200px, 1fr))", "gap":"12px"})
+                        ], className="insight-card"))
+                
+                return html.Div(cards) if cards else html.Div("No prediction data available", style={"textAlign":"center","color":"#6b7280","padding":"40px"})
+            except Exception as e:
+                return html.Div(f"Error loading predictions: {str(e)}", style={"textAlign":"center","color":"#ef4444","padding":"40px"})
+        
+        if tab == "correlations":
+            try:
+                corr = requests.get("http://localhost:8000/api/correlations", params={"session_id": sid}).json()
+                
+                hidden_correlations = corr.get("hidden_correlations", [])
+                lag_correlations = corr.get("lag_correlations", [])
+                
+                cards = []
+                
+                if hidden_correlations:
+                    cards.append(html.Div([
+                        html.H4("🔍 Hidden Correlations Discovered", style={"margin":"0 0 16px 0", "fontSize":"1.3rem", "fontWeight":"600"}),
+                        html.P("AI-discovered non-obvious relationships in your health data:", style={"margin":"0 0 16px 0", "color":"#6b7280"}),
+                        *[html.Div([
+                            html.H5(f"{c['metric1'].replace('_', ' ').title()} ↔ {c['metric2'].replace('_', ' ').title()}", style={"margin":"0 0 8px 0", "fontSize":"1.1rem", "fontWeight":"600"}),
+                            html.P(c["interpretation"], style={"margin":"0 0 8px 0", "color":"#6b7280", "fontSize":"0.95rem"}),
+                            html.Div([
+                                html.Span(f"Correlation: {c['correlation']:.3f}", style={"background":"#3b82f6", "color":"white", "padding":"4px 8px", "borderRadius":"12px", "fontSize":"0.8rem", "marginRight":"8px"}),
+                                html.Span(f"p-value: {c['p_value']:.3f}", style={"background":"#10b981", "color":"white", "padding":"4px 8px", "borderRadius":"12px", "fontSize":"0.8rem", "marginRight":"8px"}),
+                                html.Span(f"n={c['sample_size']}", style={"background":"#6b7280", "color":"white", "padding":"4px 8px", "borderRadius":"12px", "fontSize":"0.8rem"})
+                            ], style={"marginTop":"8px"})
+                        ], className="insight-card", style={"marginBottom":"12px"}) for c in hidden_correlations[:5]]
+                    ]))
+                
+                if lag_correlations:
+                    cards.append(html.Div([
+                        html.H4("⏰ Time-Lagged Correlations", style={"margin":"0 0 16px 0", "fontSize":"1.3rem", "fontWeight":"600"}),
+                        html.P("How past behaviors affect future health outcomes:", style={"margin":"0 0 16px 0", "color":"#6b7280"}),
+                        *[html.Div([
+                            html.H5(f"{c['predictor'].replace('_', ' ').title()} → {c['outcome'].replace('_', ' ').title()} ({c['lag_days']} day lag)", style={"margin":"0 0 8px 0", "fontSize":"1.1rem", "fontWeight":"600"}),
+                            html.P(c["interpretation"], style={"margin":"0 0 8px 0", "color":"#6b7280", "fontSize":"0.95rem"}),
+                            html.Div([
+                                html.Span(f"Correlation: {c['correlation']:.3f}", style={"background":"#3b82f6", "color":"white", "padding":"4px 8px", "borderRadius":"12px", "fontSize":"0.8rem", "marginRight":"8px"}),
+                                html.Span(f"p-value: {c['p_value']:.3f}", style={"background":"#10b981", "color":"white", "padding":"4px 8px", "borderRadius":"12px", "fontSize":"0.8rem"})
+                            ], style={"marginTop":"8px"})
+                        ], className="insight-card", style={"marginBottom":"12px"}) for c in lag_correlations[:5]]
+                    ]))
+                
+                return html.Div(cards) if cards else html.Div("No correlation data available", style={"textAlign":"center","color":"#6b7280","padding":"40px"})
+            except Exception as e:
+                return html.Div(f"Error loading correlations: {str(e)}", style={"textAlign":"center","color":"#ef4444","padding":"40px"})
 
     @callback(
         Output("download-meals","data"),

@@ -4,7 +4,9 @@ from app.api.features import load_daily, load_meals
 from app.ml.glycemic import add_meal_features
 from app.ml.causal import doubly_robust_ate
 from app.ml.anomalies import anomaly_runs
-from app.ml.correlations import corr_with_p
+from app.ml.correlations import corr_with_p, discover_hidden_correlations, find_lag_correlations
+from app.ml.predictive import predict_glucose_response, predict_sleep_impact, generate_health_forecast
+from app.ml.health_score import calculate_metabolic_health_score, generate_personalized_recommendations
 from app.config import LOW_SLEEP_THRESHOLD, MIN_SAMPLES
 
 router = APIRouter()
@@ -119,3 +121,44 @@ def insights(session_id: str):
         })
 
     return {"cards": cards}
+
+@router.get("/health-score")
+def health_score(session_id: str):
+    daily = load_daily(session_id)
+    meals = add_meal_features(load_meals(session_id))
+    
+    scores = calculate_metabolic_health_score(daily, meals)
+    recommendations = generate_personalized_recommendations(scores, daily, meals)
+    
+    return {
+        "scores": scores,
+        "recommendations": recommendations
+    }
+
+@router.get("/predictions")
+def predictions(session_id: str):
+    daily = load_daily(session_id)
+    meals = add_meal_features(load_meals(session_id))
+    
+    glucose_pred = predict_glucose_response(meals, daily)
+    sleep_pred = predict_sleep_impact(daily)
+    forecast = generate_health_forecast(daily)
+    
+    return {
+        "glucose_prediction": glucose_pred,
+        "sleep_impact": sleep_pred,
+        "health_forecast": forecast
+    }
+
+@router.get("/correlations")
+def correlations(session_id: str):
+    daily = load_daily(session_id)
+    meals = add_meal_features(load_meals(session_id))
+    
+    hidden_correlations = discover_hidden_correlations(daily, meals)
+    lag_correlations = find_lag_correlations(daily)
+    
+    return {
+        "hidden_correlations": hidden_correlations,
+        "lag_correlations": lag_correlations
+    }
