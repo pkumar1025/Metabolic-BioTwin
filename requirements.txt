@@ -1,0 +1,12 @@
+fastapi==0.115.0
+uvicorn==0.30.6
+pandas==2.2.2
+numpy==2.0.1
+scikit-learn==1.5.1
+scipy==1.13.1
+plotly==5.23.0
+dash==2.17.1
+pydantic==2.8.2
+python-multipart==0.0.9
+pyarrow==21.0.0
+requests==2.31.0
