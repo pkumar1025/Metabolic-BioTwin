@@ -64,154 +64,56 @@ A digital twin for metabolic health that:
 ### Known Issues
 - **File Upload**: Individual file upload functionality still needs to be fixed and tested
 
-## Technical Decision Rationale & Tradeoffs
+## Technical Approach & Design Choices
 
-### Architecture Decisions
+### Why This Technical Stack?
 
-#### Why FastAPI + Plotly Dash?
-**Decision**: FastAPI backend with Plotly Dash frontend
-**Alternatives Considered**: 
-- Flask + React (more flexible but slower development)
-- Django + Vue.js (more complex for data-heavy app)
-- Streamlit (simpler but less customizable)
+**Backend: FastAPI + Python**
+- **Chosen over**: Flask (less type safety), Django (overkill for API), Node.js (less ML ecosystem)
+- **Reasoning**: FastAPI provides automatic API documentation, type safety, and excellent performance for data-heavy applications. Python's ML ecosystem (pandas, scikit-learn) integrates seamlessly.
 
-**Tradeoffs**:
-- **Pros**: FastAPI provides automatic API documentation, type safety, and excellent performance. Dash integrates seamlessly with Python data science stack.
-- **Cons**: Less frontend flexibility than React, limited to Python-based UI components
-- **Rationale**: For a data-heavy health application, the tight integration between backend ML and frontend visualization outweighed the frontend flexibility limitations.
+**Frontend: Plotly Dash**
+- **Chosen over**: React (requires separate backend/frontend), Streamlit (less customizable), Vue.js (more complex setup)
+- **Reasoning**: Dash integrates directly with Python data science stack, eliminating the need for separate frontend/backend development. Perfect for data visualization with minimal code.
 
-#### Why Local Processing vs. Cloud?
-**Decision**: All data processing happens locally on user's device
-**Alternatives Considered**:
-- Cloud-based processing (AWS, Google Cloud)
-- Hybrid approach (local + cloud)
+**Data Processing: Local vs Cloud**
+- **Chosen**: Local processing on user's device
+- **Chosen over**: Cloud processing (AWS, Google Cloud)
+- **Reasoning**: Health data privacy is paramount. Users maintain complete control over sensitive metabolic data. No data transmission means no privacy risks.
 
-**Tradeoffs**:
-- **Pros**: Complete privacy protection, no data transmission, user control, no ongoing costs
-- **Cons**: Limited computational power, no cloud ML services, harder to scale, requires local installation
-- **Rationale**: Health data privacy is paramount. Users should have complete control over their sensitive metabolic data.
+### Why These AI Methods?
 
-#### Why CSV Upload vs. API Integration?
-**Decision**: Flexible CSV upload with column name recognition
-**Alternatives Considered**:
-- Direct API integration (Apple HealthKit, Google Fit)
-- Database integration
-- Real-time streaming
+**Random Forest for Glucose Prediction**
+- **Chosen over**: Neural Networks (overkill for tabular data), Linear Regression (too simple), XGBoost (similar performance, more complex)
+- **Reasoning**: Health decisions require interpretable AI. Random Forest provides feature importance rankings, handles non-linear relationships, and works well with small datasets typical in personal health data.
 
-**Tradeoffs**:
-- **Pros**: Works with any health device, no API dependencies, handles data format variations, privacy-first
-- **Cons**: Manual upload process, no real-time sync, limited to batch processing
-- **Rationale**: Health data comes from many different sources with varying formats. CSV provides maximum compatibility while maintaining privacy.
+**Statistical Correlation Analysis**
+- **Chosen over**: Deep Learning pattern recognition, Time series analysis
+- **Reasoning**: Health insights must be trustworthy and explainable. Statistical methods provide confidence intervals, significance testing, and clear interpretation - essential for health decision-making.
 
-### Machine Learning Decisions
+**Doubly Robust Estimation for Causal Inference**
+- **Chosen over**: Simple correlation analysis, Propensity score matching
+- **Reasoning**: Health decisions require understanding true cause-and-effect, not just correlation. Doubly robust estimation handles confounding variables and provides reliable causal estimates even with model misspecification.
 
-#### Why Random Forest for Glucose Prediction?
-**Decision**: Random Forest for glucose response prediction
-**Alternatives Considered**:
-- Linear Regression (too simple for non-linear relationships)
-- Neural Networks (overkill for this data size)
-- XGBoost (more complex, similar performance)
+**Local Data Science Libraries**
+- **Chosen over**: External AI APIs (OpenAI, Anthropic), Cloud ML services
+- **Reasoning**: Privacy-first approach with complete user control. Traditional libraries (scikit-learn, scipy) provide interpretable results without data leaving the user's device.
 
-**Tradeoffs**:
-- **Pros**: Handles non-linear relationships, robust to outliers, provides feature importance, interpretable results
-- **Cons**: Less sophisticated than deep learning, limited to tabular data
-- **Rationale**: Health data is inherently interpretable and requires explainable AI. Random Forest provides good performance with clear feature importance.
+### Why This Implementation Path?
 
-#### Why Doubly Robust Estimation for Causal Inference?
-**Decision**: Doubly robust estimation for treatment effects
-**Alternatives Considered**:
-- Simple correlation analysis
-- Propensity score matching
-- Instrumental variables
+**CSV Upload System**
+- **Chosen over**: Direct API integration (Apple HealthKit, Google Fit), Database integration
+- **Reasoning**: Health data comes from many different sources with varying formats. CSV provides maximum compatibility while maintaining privacy. Works with any health device without API dependencies.
 
-**Tradeoffs**:
-- **Pros**: More robust than simple correlations, handles confounding variables, provides causal estimates
-- **Cons**: More complex implementation, requires larger sample sizes, computationally intensive
-- **Rationale**: Health decisions require understanding causality, not just correlation. Doubly robust estimation provides reliable causal estimates even with model misspecification.
+**Flexible Column Recognition**
+- **Chosen over**: Fixed column names, User-specified mapping
+- **Reasoning**: Real-world health data is messy. Different devices use different naming conventions. Intelligent parsing handles this automatically, improving user experience.
 
-#### Why Statistical Correlation Analysis vs. Deep Learning?
-**Decision**: Spearman/Pearson correlation with confidence intervals
-**Alternatives Considered**:
-- Deep learning pattern recognition
-- Time series analysis
-- Clustering algorithms
-
-**Tradeoffs**:
-- **Pros**: Interpretable results, statistical significance testing, confidence intervals, works with small datasets
-- **Cons**: Limited to linear relationships, requires statistical knowledge to interpret
-- **Rationale**: Health insights need to be trustworthy and interpretable. Statistical methods provide clear confidence measures and are more reliable for health decisions.
-
-### Data Processing Decisions
-
-#### Why Flexible Column Name Recognition?
-**Decision**: Intelligent CSV parsing that recognizes various column naming conventions
-**Alternatives Considered**:
-- Fixed column names
-- User-specified column mapping
-- Machine learning column detection
-
-**Tradeoffs**:
-- **Pros**: Works with any CSV format, user-friendly, handles real-world data messiness
-- **Cons**: More complex code, potential for misidentification, requires extensive testing
-- **Rationale**: Health data comes from many different sources with varying formats. Flexibility is essential for real-world usability.
-
-#### Why Multi-dimensional Health Scoring?
-**Decision**: Composite scoring across glucose, sleep, recovery, nutrition, and activity
-**Alternatives Considered**:
-- Single health score
-- Individual metric tracking
-- Machine learning-based scoring
-
-**Tradeoffs**:
-- **Pros**: Comprehensive health view, actionable insights, easy to understand
-- **Cons**: Subjective weighting, potential for oversimplification, requires domain expertise
-- **Rationale**: Users need a holistic view of their health. Multi-dimensional scoring provides actionable insights while maintaining interpretability.
-
-### Implementation Challenges & Solutions
-
-#### Challenge: Data Integration Complexity
-**Problem**: Every health device uses different formats and column names
-**Solution**: Built flexible CSV parser with column name recognition
-**Tradeoff**: More complex code vs. maximum compatibility
-**Learning**: Real-world data is messier than expected. Flexibility is more important than elegance.
-
-#### Challenge: Statistical Rigor vs. User Experience
-**Problem**: Balancing advanced statistics with user-friendly insights
-**Solution**: Used confidence intervals and significance testing, but presented in plain language
-**Tradeoff**: More complex implementation vs. more trustworthy results
-**Learning**: Users need both accuracy and accessibility. Technical sophistication should enhance, not complicate, the user experience.
-
-#### Challenge: Privacy vs. Functionality
-**Problem**: Maintaining privacy while providing powerful AI insights
-**Solution**: Local processing with no data transmission
-**Tradeoff**: Limited computational power vs. complete privacy protection
-**Learning**: For health data, privacy is not negotiable. Functionality must work within privacy constraints.
-
-#### Challenge: Model Validation with Limited Data
-**Problem**: Health data is often limited and personal
-**Solution**: Used bootstrap confidence intervals and significance testing
-**Tradeoff**: Less robust validation vs. working with available data
-**Learning**: Health data is inherently personal and limited. Validation methods must be appropriate for the data size and context.
-
-### Future Technical Considerations
-
-#### Scalability Tradeoffs
-**Current**: Single-user local processing
-**Future**: Multi-user cloud processing
-**Tradeoff**: Privacy vs. scalability
-**Consideration**: May need hybrid approach for enterprise features
-
-#### AI Sophistication vs. Interpretability
-**Current**: Interpretable statistical methods
-**Future**: More sophisticated ML models
-**Tradeoff**: Performance vs. explainability
-**Consideration**: Health decisions require explainable AI
-
-#### Real-time vs. Batch Processing
-**Current**: Batch CSV processing
-**Future**: Real-time data streams
-**Tradeoff**: Privacy vs. real-time insights
-**Consideration**: May need edge computing solutions
+### Design Philosophy
+- **Privacy-First**: User data never leaves their device
+- **Interpretable AI**: Health decisions require explainable, trustworthy insights
+- **Flexible Data**: Handles real-world data messiness from various health devices
+- **User-Centric**: Complex data presented in accessible, actionable formats
 
 ### Data Flow
 1. **Ingestion**: CSV upload with flexible column name recognition
@@ -295,6 +197,17 @@ A digital twin for metabolic health that:
 5. **Enrichment**: Derived metrics and calculated fields
 
 ## AI/ML Components
+
+### AI/ML Implementation Details
+The platform uses traditional data science libraries rather than external AI APIs:
+
+- **Predictive Modeling**: Random Forest regression for glucose response prediction
+- **Correlation Analysis**: Spearman and Pearson correlation with statistical significance testing
+- **Causal Inference**: Doubly robust estimation using logistic and linear regression
+- **Anomaly Detection**: Rolling median with Median Absolute Deviation (MAD)
+- **Health Scoring**: Multi-dimensional weighted scoring algorithms
+
+This approach prioritizes interpretability and privacy over the complexity of external AI services.
 
 ### Causal Inference
 - **Method**: Doubly robust estimation for treatment effects

@@ -139,6 +139,16 @@ The system automatically recognizes various column naming conventions:
 - **ML**: Scikit-learn for machine learning models
 - **Data Processing**: Pandas for data manipulation
 
+### AI/ML Implementation
+This platform uses traditional data science and machine learning libraries rather than external AI APIs:
+
+- **Machine Learning**: Scikit-learn for predictive modeling (Random Forest, Linear Regression)
+- **Statistical Analysis**: SciPy for correlation analysis and statistical significance testing
+- **Data Processing**: Pandas and NumPy for data manipulation and feature engineering
+- **Causal Inference**: Custom implementation of doubly robust estimation for treatment effects
+
+All analysis happens locally on your device - no data is sent to external AI services.
+
 ### Key AI Features
 - **Causal Inference**: Doubly robust estimation for treatment effects
 - **Correlation Discovery**: Statistical analysis of health metric relationships
