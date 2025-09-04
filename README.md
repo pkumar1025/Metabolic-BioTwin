@@ -5,7 +5,7 @@ AI-Powered Personal Health Intelligence Platform
 Transform fragmented health data into actionable, personalized insights through advanced machine learning and causal inference.
 
 ## 🎥 Demo Video
-Watch the platform in action: [Metabolic BioTwin Demo](https://www.loom.com/share/8ffecbf3c78c4265baf15e3775903841?sid=003aa9c1-865c-4f3c-bcec-c9bc3c9d18d3)
+Watch the platform in action: [Metabolic BioTwin Demo](https://drive.google.com/file/d/1qbvrvOXfvnrXi7sJ7am_7vKdCSJ3toow/view?usp=sharing)
 
 ## Quick Start
 
