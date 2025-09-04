@@ -13,26 +13,58 @@ router = APIRouter()
 
 @router.get("/timeline")
 def timeline(session_id: str):
-    df = load_daily(session_id)
-    return {
-        "dates": pd.to_datetime(df["date"]).astype(str).tolist(),
-        "sleep_hours": df.get("sleep_hours", pd.Series()).fillna(0).tolist(),
-        "hrv": df.get("hrv", pd.Series()).fillna(0).tolist(),
-        "rhr": df.get("rhr", pd.Series()).fillna(0).tolist(),
-        "fg_fast_mgdl": df.get("fg_fast_mgdl", pd.Series()).fillna(0).tolist(),
-    }
+    try:
+        df = load_daily(session_id)
+        return {
+            "dates": pd.to_datetime(df["date"]).astype(str).tolist(),
+            "sleep_hours": df.get("sleep_hours", pd.Series()).fillna(0).tolist(),
+            "hrv": df.get("hrv", pd.Series()).fillna(0).tolist(),
+            "rhr": df.get("rhr", pd.Series()).fillna(0).tolist(),
+            "fg_fast_mgdl": df.get("fg_fast_mgdl", pd.Series()).fillna(0).tolist(),
+        }
+    except KeyError:
+        # Session data not found, return empty data
+        return {
+            "dates": [],
+            "sleep_hours": [],
+            "hrv": [],
+            "rhr": [],
+            "fg_fast_mgdl": [],
+        }
 
 @router.get("/meals")
 def meals(session_id: str):
-    m = add_meal_features(load_meals(session_id)).sort_values(["date","time"])
-    cols = ["date","time","carbs_g","protein_g","fat_g","fiber_g","carbs_pct",
-            "late_meal","post_meal_walk10","meal_auc","meal_peak","ttpeak_min"]
-    return {"meals": m[cols].astype(str).to_dict(orient="records")}
+    try:
+        m = add_meal_features(load_meals(session_id)).sort_values(["date","time"])
+        cols = ["date","time","carbs_g","protein_g","fat_g","fiber_g","carbs_pct",
+                "late_meal","post_meal_walk10","meal_auc","meal_peak","ttpeak_min"]
+        return {"meals": m[cols].astype(str).to_dict(orient="records")}
+    except KeyError:
+        # Session data not found, return empty data
+        return {"meals": []}
 
 @router.get("/insights")
 def insights(session_id: str):
-    daily = load_daily(session_id)
-    meals = add_meal_features(load_meals(session_id))
+    try:
+        daily = load_daily(session_id)
+        meals = add_meal_features(load_meals(session_id))
+    except KeyError:
+        # Session data not found, return empty insights
+        return {
+            "cards": [],
+            "data_quality": {
+                "total_data_points": 0,
+                "data_completeness": {"sleep_data": 0, "glucose_data": 0, "meal_data": 0, "activity_data": 0},
+                "data_span_days": 0,
+                "processing_status": "no_data"
+            },
+            "ai_metrics": {
+                "correlations_discovered": 0,
+                "causal_effects_found": 0,
+                "anomalies_detected": 0,
+                "model_confidence": "no_data"
+            }
+        }
 
     # Map previous-night sleep to meals (next day)
     d = daily[["date","sleep_hours","hrv","rhr"]].copy()
