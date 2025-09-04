@@ -9,6 +9,39 @@ def build_dash_app():
     app = dash.Dash(__name__, requests_pathname_prefix="/app/")
     server = app.server
 
+    # Helper functions to reduce code duplication
+    def create_status_message(icon_class, text, status_type):
+        """Create a status message with icon and text"""
+        return html.Div([
+            html.Div([
+                html.I(className=f"fas {icon_class} status-{status_type}-icon"),
+                html.Span(text, className=f"status-{status_type}-text")
+            ], className=f"status-{status_type}")
+        ])
+    
+    def create_metric_card(title, value, trend=None, color="#1e3a8a"):
+        """Create a metric card with consistent styling"""
+        return html.Div([
+            html.H4(title, className="margin-bottom-8 text-xl font-weight-600 text-gray-700 font-inter"),
+            html.H2(f"{value}", className="margin-bottom-8 text-4xl font-weight-800", style={"color": color}),
+            html.P(trend, className="margin-0 text-gray-500") if trend else None
+        ], className="metric-card")
+    
+    def create_feature_card(title, description, gradient_bg, border_color, shadow_color):
+        """Create a feature card with consistent styling"""
+        return html.Div([
+            html.H5(title, className="margin-bottom-8 text-lg font-weight-600 text-gray-700 font-inter"),
+            html.P(description, className="margin-0 text-gray-500")
+        ], className="feature-card", style={
+            "textAlign": "center", 
+            "padding": "24px", 
+            "background": gradient_bg, 
+            "borderRadius": "16px", 
+            "border": f"1px solid {border_color}", 
+            "boxShadow": f"0 8px 25px {shadow_color}, 0 4px 12px {shadow_color}", 
+            "cursor": "pointer"
+        })
+
     # Custom CSS for modern styling
     app.index_string = '''
     <!DOCTYPE html>
@@ -35,7 +68,7 @@ def build_dash_app():
                     border-radius: 16px;
                     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
                     margin: 20px auto;
-                    max-width: 1200px;
+                    max-width: 1400px;
                     overflow: hidden;
                 }
                 .header {
@@ -119,17 +152,18 @@ def build_dash_app():
                     margin-right: auto;
                 }
                 .header .subtitle {
-                    margin: 4px 0 0 0;
-                    opacity: 0.6;
-                    font-size: 0.9rem;
-                    font-weight: 300;
-                    letter-spacing: 0.05em;
+                    margin: 8px 0 0 0;
+                    opacity: 0.85;
+                    font-size: 1rem;
+                    font-weight: 500;
+                    letter-spacing: 0.02em;
                     text-transform: uppercase;
                     position: relative;
                     z-index: 1;
                     max-width: 1100px;
                     margin-left: auto;
                     margin-right: auto;
+                    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
                 }
                 .header .features {
                     margin: 8px 0 0 0;
@@ -413,36 +447,143 @@ def build_dash_app():
                     gap: 16px;
                     margin: 5px 20px;
                 }
-                .loading-spinner {
-                    display: inline-block;
-                    width: 20px;
-                    height: 20px;
-                    border: 3px solid #f3f3f3;
-                    border-top: 3px solid #3b82f6;
-                    border-radius: 50%;
-                    animation: spin 1s linear infinite;
+                .loading-inline {
+                    display: flex;
+                    align-items: center;
+                }
+                
+                #loading-indicator {
+                    display: none;
+                }
+                
+                /* Common style classes to replace inline styles */
+                .flex-center {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                
+                .text-center {
+                    text-align: center;
+                }
+                
+                .card-title {
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                    margin-top: 0;
+                    text-align: center;
+                }
+                
+                .card-text {
+                    color: #6b7280;
+                    font-size: 0.95rem;
+                    line-height: 1.5;
+                    margin: 0;
+                }
+                
+                .problem-card {
+                    flex: 1;
+                    padding: 16px 20px 20px 20px;
+                    background: #fef2f2;
+                    border-radius: 8px;
+                    border: 1px solid #fecaca;
+                }
+                
+                .solution-card {
+                    flex: 1;
+                    padding: 16px 20px 20px 20px;
+                    background: #f0fdf4;
+                    border-radius: 8px;
+                    border: 1px solid #bbf7d0;
+                }
+                
+                .feature-card-base {
+                    text-align: center;
+                    padding: 12px 16px 16px 16px;
+                    background: white;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                    border: 1px solid #e5e7eb;
+                    flex: 1;
+                }
+                
+                .feature-icon {
+                    font-size: 1.5rem;
+                    margin-bottom: 8px;
+                    margin-top: 0;
+                }
+                
+                .feature-title {
+                    font-size: 1rem;
+                    font-weight: 600;
+                    color: #1f2937;
+                    margin-bottom: 4px;
+                    margin-top: 0;
+                }
+                
+                .feature-text {
+                    font-size: 0.85rem;
+                    color: #6b7280;
+                    line-height: 1.4;
+                    margin: 0;
+                }
+                /* Common margin patterns */
+                .margin-bottom-8 {
+                    margin: 0 0 8px 0;
+                }
+                
+                .margin-0 {
+                    margin: 0;
+                }
+                
+                /* Common font patterns */
+                .font-inter {
+                    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                }
+                
+                .font-weight-600 {
+                    font-weight: 600;
+                }
+                
+                .font-weight-800 {
+                    font-weight: 800;
+                }
+                
+                .text-gray-700 {
+                    color: #1f2937;
+                }
+                
+                .text-gray-500 {
+                    color: #6b7280;
+                }
+                
+                .text-blue-800 {
+                    color: #1e3a8a;
+                }
+                
+                /* Common size patterns */
+                .text-lg {
+                    font-size: 1.1rem;
+                }
+                
+                .text-xl {
+                    font-size: 1.2rem;
+                }
+                
+                .text-2xl {
+                    font-size: 1.3rem;
+                }
+                
+                .text-4xl {
+                    font-size: 2.5rem;
                 }
                 @keyframes spin {
                     0% { transform: rotate(0deg); }
                     100% { transform: rotate(360deg); }
                 }
-                .fade-in {
-                    animation: fadeIn 0.5s ease-in;
-                }
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .pulse {
-                    animation: pulse 2s infinite;
-                }
-                @keyframes pulse {
-                    0% { transform: scale(1); }
-                    50% { transform: scale(1.05); }
-                    100% { transform: scale(1); }
-                }
                 .upload-section {
-                    padding: 24px 20px;
+                    padding: 16px 20px;
                 }
                 .upload-layout {
                     display: grid;
@@ -557,6 +698,47 @@ def build_dash_app():
                 }
                 .demo-section {
                     text-align: center;
+                }
+                .demo-files-section {
+                    margin-top: 16px;
+                    padding: 16px;
+                    background: #f8fafc;
+                    border-radius: 12px;
+                    border: 1px solid #e5e7eb;
+                }
+                .demo-files-grid {
+                    display: grid;
+                    grid-template-columns: repeat(4, 1fr);
+                    gap: 12px;
+                    margin-top: 16px;
+                }
+                @media (max-width: 768px) {
+                    .demo-files-grid {
+                        grid-template-columns: repeat(2, 1fr);
+                    }
+                }
+                .demo-file-link {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 12px 16px;
+                    background: white;
+                    border: 1px solid #e5e7eb;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    color: #374151;
+                    font-weight: 500;
+                    font-size: 0.9rem;
+                    transition: all 0.2s ease;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                }
+                .demo-file-link:hover {
+                    background: #f9fafb;
+                    border-color: #d1d5db;
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    text-decoration: none;
+                    color: #1f2937;
                 }
                 .demo-divider {
                     margin: 32px 0;
@@ -720,12 +902,12 @@ def build_dash_app():
                 html.Div([
                     html.Div([
                         html.I(className="fas fa-heartbeat", style={"fontSize":"4.5rem", "color":"#10b981", "marginRight":"24px", "marginBottom":"8px"}),
-                        html.Div([
-                            html.H1("Metabolic BioTwin", className="header-compact"),
-                            html.P("Your Personal Health Intelligence Platform", className="header-compact tagline"),
+                html.Div([
+                    html.H1("Metabolic BioTwin", className="header-compact"),
+                    html.P("Your Personal Health Intelligence Platform", className="header-compact tagline"),
                         ])
-                    ], style={"display":"flex", "alignItems":"center", "justifyContent":"center"}),
-                ], style={"textAlign":"center", "position":"relative", "zIndex":"1"}),
+                    ], className="flex-center"),
+                ], className="text-center", style={"position":"relative", "zIndex":"1"}),
                 dcc.Store(id="session-id", data=None),
             ], className="header"),
 
@@ -737,41 +919,47 @@ def build_dash_app():
                     
                     html.Div([
                         html.Div([
-                            html.H3("The Problem", style={"color":"#dc2626", "fontSize":"1.2rem", "fontWeight":"600", "marginBottom":"8px", "marginTop":"0", "textAlign":"center"}),
+                            html.H3("The Problem", className="card-title", style={"color":"#dc2626"}),
                             html.P("Metabolic health data is scattered across glucose monitors, fitness trackers, and nutrition apps, making it impossible to understand how sleep, diet, and exercise impact your glucose response and metabolic function.", 
-                                   style={"color":"#6b7280", "fontSize":"0.95rem", "lineHeight":"1.5", "margin":"0"})
-                        ], style={"flex":"1", "padding":"16px 20px 20px 20px", "background":"#fef2f2", "borderRadius":"8px", "border":"1px solid #fecaca"}),
+                                   className="card-text")
+                        ], className="problem-card"),
                         
                         html.Div([
-                            html.H3("What Metabolic BioTwin Does", style={"color":"#059669", "fontSize":"1.2rem", "fontWeight":"600", "marginBottom":"8px", "marginTop":"0", "textAlign":"center"}),
-                            html.P("AI-powered platform that unifies metabolic data streams to predict glucose responses, discover hidden correlations between lifestyle factors and metabolic health, and provide personalized insights for optimal metabolic function.", 
-                                   style={"color":"#6b7280", "fontSize":"0.95rem", "lineHeight":"1.5", "margin":"0"})
-                        ], style={"flex":"1", "padding":"16px 20px 20px 20px", "background":"#f0fdf4", "borderRadius":"8px", "border":"1px solid #bbf7d0"})
+                            html.H3("What Metabolic BioTwin Does", className="card-title", style={"color":"#059669"}),
+                            html.P("Unifies data from all your health devices into one intelligent dashboard that predicts glucose spikes, discovers hidden patterns, and delivers actionable insights to optimize your metabolic health.", 
+                                   className="card-text")
+                        ], className="solution-card")
                     ], style={"display":"flex", "gap":"20px", "marginBottom":"24px"}),
                     
                     html.Div([
                         html.Div([
-                            html.I(className="fas fa-brain", style={"fontSize":"1.5rem", "color":"#3b82f6", "marginBottom":"8px", "marginTop":"0"}),
-                            html.H4("AI Correlation Discovery", style={"fontSize":"1rem", "fontWeight":"600", "color":"#1f2937", "marginBottom":"4px", "marginTop":"0"}),
-                            html.P("Discover metabolic correlations like 'Poor sleep increases your glucose spike by 40% after high-carb meals'", 
-                                   style={"fontSize":"0.85rem", "color":"#6b7280", "lineHeight":"1.4", "margin":"0"})
-                        ], style={"textAlign":"center", "padding":"12px 16px 16px 16px", "background":"white", "borderRadius":"8px", "boxShadow":"0 1px 3px rgba(0, 0, 0, 0.1)", "border":"1px solid #e5e7eb", "flex":"1"}),
+                            html.I(className="fas fa-brain feature-icon", style={"color":"#3b82f6"}),
+                            html.H4("AI Correlation Discovery", className="feature-title"),
+                            html.P([
+                                "AI discovers hidden patterns across all your health data. For instance, ",
+                                html.B("'On days you sleep less than 6 hours, your craving for high-sugar foods increases 30% the next afternoon'")
+                            ], className="feature-text")
+                        ], className="feature-card-base"),
                         
                         html.Div([
-                            html.I(className="fas fa-chart-line", style={"fontSize":"1.5rem", "color":"#10b981", "marginBottom":"8px", "marginTop":"0"}),
-                            html.H4("Unified Dashboard", style={"fontSize":"1rem", "fontWeight":"600", "color":"#1f2937", "marginBottom":"4px", "marginTop":"0"}),
-                            html.P("Visualize how sleep quality affects your glucose response and metabolic recovery patterns", 
-                                   style={"fontSize":"0.85rem", "color":"#6b7280", "lineHeight":"1.4", "margin":"0"})
-                        ], style={"textAlign":"center", "padding":"12px 16px 16px 16px", "background":"white", "borderRadius":"8px", "boxShadow":"0 1px 3px rgba(0, 0, 0, 0.1)", "border":"1px solid #e5e7eb", "flex":"1"}),
+                            html.I(className="fas fa-chart-line feature-icon", style={"color":"#10b981"}),
+                            html.H4("Unified Dashboard", className="feature-title"),
+                            html.P([
+                                "Single dashboard unifies sleep, nutrition, activity & vitals to tell your complete health story. For instance, ",
+                                html.B("'Poor sleep last night led to 40% worse workout performance today'")
+                            ], className="feature-text")
+                        ], className="feature-card-base"),
                         
                         html.Div([
-                            html.I(className="fas fa-exclamation-triangle", style={"fontSize":"1.5rem", "color":"#f59e0b", "marginBottom":"8px", "marginTop":"0"}),
-                            html.H4("Smart Alerts", style={"fontSize":"1rem", "fontWeight":"600", "color":"#1f2937", "marginBottom":"4px", "marginTop":"0"}),
-                            html.P("Get metabolic alerts like 'Your glucose variability has increased 25% - consider adjusting meal timing'", 
-                                   style={"fontSize":"0.85rem", "color":"#6b7280", "lineHeight":"1.4", "margin":"0"})
-                        ], style={"textAlign":"center", "padding":"12px 16px 16px 16px", "background":"white", "borderRadius":"8px", "boxShadow":"0 1px 3px rgba(0, 0, 0, 0.1)", "border":"1px solid #e5e7eb", "flex":"1"})
+                            html.I(className="fas fa-exclamation-triangle feature-icon", style={"color":"#f59e0b"}),
+                            html.H4("Smart Alerts", className="feature-title"),
+                            html.P([
+                                "Learns your normal baselines and flags deviations with context. For instance, ",
+                                html.B("'Your resting heart rate elevated 3 consecutive days - previously correlated with high stress periods'")
+                            ], className="feature-text")
+                        ], className="feature-card-base")
                     ], style={"display":"flex", "gap":"16px"})
-                ], style={"maxWidth":"1000px", "margin":"0 auto", "padding":"20px 20px"})
+                ], style={"maxWidth":"1200px", "margin":"0 auto", "padding":"20px 20px"})
             ], style={"background":"#f8fafc", "borderBottom":"1px solid #e5e7eb"}),
 
             # Summary Metrics
@@ -821,10 +1009,38 @@ def build_dash_app():
                         
                         # Demo Button
                         html.Div([
-                            html.Hr(className="demo-divider"),
-                            html.Button("Get Started with Demo Data", id="btn-demo", className="btn-primary"),
-                            html.Div(id="ingest-status", style={"marginTop":"12px", "color":"#374151", "fontWeight":"500", "fontSize":"0.95rem"}),
-                            html.Div(id="loading-indicator", style={"marginTop":"12px", "display":"none"})
+                            html.Hr(className="demo-divider", style={"margin":"16px 0"}),
+                            html.Div([
+                                html.Button("Sample with Demo Data", id="btn-demo", className="btn-primary"),
+                                html.Div([
+                                    html.I(className="fas fa-spinner fa-spin", style={"fontSize":"1.2rem", "color":"#10b981", "marginRight":"8px"}),
+                                    html.Span("Loading...", style={"fontSize":"0.9rem", "color":"#6b7280"})
+                                ], id="loading-indicator", className="loading-inline"),
+                            ], style={"display":"flex", "alignItems":"center", "justifyContent":"center"}),
+                            html.Div(id="ingest-status", style={"marginTop":"12px", "color":"#374151", "fontWeight":"500", "fontSize":"0.95rem", "textAlign":"center"}),
+                            
+                            # Demo Data Files Section
+                            html.Div([
+                                html.H4("View Demo Data Files", className="margin-bottom-8 text-lg font-weight-600 text-gray-700 font-inter", style={"textAlign":"center", "marginTop":"8px", "marginBottom":"16px"}),
+                                html.Div([
+                                    html.A([
+                                        html.I(className="fas fa-file-csv", style={"marginRight":"8px", "color":"#ef4444"}),
+                                        "Vitals Data (CSV)"
+                                    ], href="http://localhost:8000/data/demo/vitals.csv", target="_blank", className="demo-file-link"),
+                                    html.A([
+                                        html.I(className="fas fa-file-csv", style={"marginRight":"8px", "color":"#3b82f6"}),
+                                        "Sleep Data (CSV)"
+                                    ], href="http://localhost:8000/data/demo/sleep.csv", target="_blank", className="demo-file-link"),
+                                    html.A([
+                                        html.I(className="fas fa-file-csv", style={"marginRight":"8px", "color":"#10b981"}),
+                                        "Meals Data (CSV)"
+                                    ], href="http://localhost:8000/data/demo/meals.csv", target="_blank", className="demo-file-link"),
+                                    html.A([
+                                        html.I(className="fas fa-file-csv", style={"marginRight":"8px", "color":"#f59e0b"}),
+                                        "Activity Data (CSV)"
+                                    ], href="http://localhost:8000/data/demo/activity.csv", target="_blank", className="demo-file-link")
+                                ], className="demo-files-grid")
+                            ], className="demo-files-section")
                         ], className="demo-section")
                     ]),
                     
@@ -836,7 +1052,7 @@ def build_dash_app():
                         
                         # Data Format Guide
                         html.Details([
-                            html.Summary("📋 Supported Data Formats"),
+                            html.Summary("Supported Data Formats"),
                             html.Div([
                                 html.P("Upload CSV files with health data. Supported formats:", className="format-guide-text"),
                                 html.Ul([
@@ -883,46 +1099,42 @@ def build_dash_app():
                 })
             
             return html.Div([
-                html.Div([
-                    html.I(className="fas fa-check-circle status-success-icon"),
-                    html.Span(f"Successfully uploaded {len(files_processed)} file(s)", className="status-success-text")
-                ], className="status-success"),
-                
+                create_status_message("fa-check-circle", f"Successfully uploaded {len(files_processed)} file(s)", "success"),
                 html.Div([
                     html.P("Files ready for processing. Click 'Get Started with Demo Data' to see the system in action.", className="status-info-text")
                 ], className="status-info")
             ])
             
         except Exception as e:
-            return html.Div([
-                html.Div([
-                    html.I(className="fas fa-exclamation-triangle status-error-icon"),
-                    html.Span(f"Error processing files: {str(e)}", className="status-error-text")
-                ], className="status-error")
-            ])
+            return create_status_message("fa-exclamation-triangle", f"Error processing files: {str(e)}", "error")
 
     @callback(
-        Output("session-id","data"), Output("ingest-status","children"), Output("loading-indicator","children"), Output("loading-indicator","style"),
-        Input("btn-demo","n_clicks"), prevent_initial_call=True
+        [Output("session-id","data"), Output("ingest-status","children"), Output("loading-indicator","style")],
+        [Input("btn-demo","n_clicks")],
+        prevent_initial_call=True
     )
-    def load_demo(_):
-        # Show loading state
-        loading_style = {"marginTop":"8px", "display":"block", "color":"#3b82f6", "fontWeight":"500", "fontSize":"0.9rem"}
-        loading_content = html.Div([
-            html.Span("⏳", style={"marginRight":"8px"}),
-            "Loading demo data...",
-            html.Div(className="loading-spinner", style={"display":"inline-block", "marginLeft":"8px"})
-        ])
+    def load_demo_data(n_clicks):
+        if n_clicks is None or n_clicks == 0:
+            return None, "", {"display":"none"}
         
+        # Show loading state immediately when button is clicked
+        loading_style = {"display":"flex", "marginLeft":"12px", "alignItems":"center"}
+        
+        # Add 2 second delay to ensure loading indicator is visible
         import time
-        time.sleep(0.5)  # Brief loading simulation
-        r = requests.post("http://localhost:8000/api/ingest", data={"use_demo": "true"})
-        js = r.json()
+        time.sleep(2)
         
-        # Hide loading indicator
-        loading_style_hidden = {"marginTop":"8px", "display":"none"}
-        
-        return js["session_id"], f"✅ Loaded demo data: {js['rows_daily']} days, {js['rows_meals']} meals", "", loading_style_hidden
+        # Make API call
+        try:
+            r = requests.post("http://localhost:8000/api/ingest", data={"use_demo": "true"})
+            js = r.json()
+            
+            # Hide loading indicator and show success
+            loading_style_hidden = {"display":"none"}
+            
+            return js["session_id"], f"✅ Loaded demo data: {js['rows_daily']} days, {js['rows_meals']} meals", loading_style_hidden
+        except Exception as e:
+            return None, f"❌ Error loading demo data: {str(e)}", {"display":"none"}
 
 
 
@@ -1095,7 +1307,7 @@ def build_dash_app():
             sleep = tj["sleep_hours"]
             fg_ma = moving_avg(fg, 7)
             sleep_ma = moving_avg(sleep, 7)
-            
+
             # Create two separate charts for better visualization
             # Chart 1: Fasting Glucose
             fig1 = go.Figure()

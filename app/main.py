@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.wsgi import WSGIMiddleware
 
 from app.api.ingest import router as ingest_router
@@ -17,6 +18,9 @@ app.add_middleware(
 
 app.include_router(ingest_router, prefix="/api", tags=["ingest"])
 app.include_router(insights_router, prefix="/api", tags=["insights"])
+
+# Mount static files for demo data
+app.mount("/data", StaticFiles(directory="app/data"), name="data")
 
 # Mount Dash app at /app
 dash_app = build_dash_app()

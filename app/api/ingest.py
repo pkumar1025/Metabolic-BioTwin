@@ -129,3 +129,27 @@ async def validate_file_format(file_content: str):
             "valid": False,
             "error": str(e)
         }
+
+@router.get("/demo/{filename}")
+async def get_demo_file(filename: str):
+    """Serve demo CSV files for inspection"""
+    import os
+    from fastapi.responses import FileResponse
+    
+    # Validate filename to prevent directory traversal
+    allowed_files = ["meals.csv", "sleep.csv", "activity.csv", "vitals.csv"]
+    if filename not in allowed_files:
+        raise HTTPException(status_code=404, detail="File not found")
+    
+    # Get the file path
+    file_path = os.path.join("app", "data", "demo", filename)
+    
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+    
+    return FileResponse(
+        path=file_path,
+        media_type="text/csv",
+        filename=filename,
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    )
