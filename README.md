@@ -14,7 +14,7 @@ Transform fragmented health data into actionable, personalized insights through 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/Metabolic-BioTwin.git
+   git clone https://github.com/pkumar1025/Metabolic-BioTwin.git
    cd Metabolic-BioTwin
    ```
 
