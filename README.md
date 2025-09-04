@@ -4,6 +4,9 @@ AI-Powered Personal Health Intelligence Platform
 
 Transform fragmented health data into actionable, personalized insights through advanced machine learning and causal inference.
 
+## 🎥 Demo Video
+Watch the platform in action: [Metabolic BioTwin Demo](https://www.loom.com/share/8ffecbf3c78c4265baf15e3775903841?sid=003aa9c1-865c-4f3c-bcec-c9bc3c9d18d3)
+
 ## Quick Start
 
 ### Prerequisites
@@ -35,12 +38,19 @@ Transform fragmented health data into actionable, personalized insights through 
 
 ### Option 1: Demo Data (Recommended for first-time users)
 1. Click "Get Started with Demo Data" on the homepage
-2. Explore the 6 dashboard tabs with pre-loaded sample data
+2. Explore the 4 dashboard tabs with pre-loaded sample data
+3. Navigate between Health Trends, Meals, AI Insights, and Predictions tabs
 
 ### Option 2: Upload Your Own Data
 1. Prepare CSV files with your health data (see supported formats below)
 2. Click "Upload Your Data" and select your CSV files
 3. The system will automatically process and analyze your data
+4. Access the same 4 dashboard tabs with your personal data
+
+### Additional Features
+- **Health Score API**: Available via `/api/health-score` endpoint
+- **Correlations API**: Available via `/api/correlations` endpoint
+- *Note: These features have complete backend implementations but are not yet integrated into the dashboard UI*
 
 ## Supported Data Formats
 
@@ -84,29 +94,42 @@ The system automatically recognizes various column naming conventions:
 
 ## Dashboard Features
 
-### 1. Timeline
-- Health trends over time
-- Correlated visualizations of sleep, activity, nutrition, and vitals
+### 1. Health Trends
+- Interactive time-series visualizations
+- Correlated view of sleep, activity, nutrition, and vitals over time
+- Zoom/pan functionality for detailed analysis
 
 ### 2. Meals
-- Detailed nutrition analysis
+- Detailed nutrition analysis with streamlined data table
 - Meal-by-meal breakdown with glucose response predictions
+- Color-coded status indicators and AI-driven insights
+- Export functionality for meal data
 
-### 3. Insights
-- AI-generated actionable insights
+### 3. AI Insights
+- AI-generated actionable health recommendations
 - Causal relationships and correlation discoveries
-
-### 4. Health Score
-- Personalized scoring across multiple health dimensions
-- Trend analysis and recommendations
-
-### 5. Predictions
-- ML-powered forecasting
-- Scenario modeling for different health choices
-
-### 6. Correlations
-- Hidden relationship discovery
 - Statistical analysis with confidence intervals
+- Personalized insights based on your data patterns
+
+### 4. Predictions
+- ML-powered forecasting for glucose response
+- Scenario modeling for different health choices
+- Risk assessment and recommendations
+- Interactive prediction charts
+
+## Additional API Features
+
+*Note: The following features have backend APIs available but are not yet integrated into the dashboard UI:*
+
+### Health Score API
+- Multi-dimensional health assessment across glucose, sleep, recovery, nutrition, and activity
+- Trend analysis and personalized recommendations
+- Component breakdown and scoring
+
+### Correlations API
+- Hidden relationship discovery between health metrics
+- Time-lagged correlation analysis
+- Statistical significance testing
 
 ## Technical Details
 
@@ -148,7 +171,3 @@ pip install -r requirements.txt --force-reinstall
 - Check the console output for error messages
 - Ensure all required columns are present in your CSV files
 - Try the demo data first to verify the system is working
-
-## License
-
-MIT License - see LICENSE file for details.
