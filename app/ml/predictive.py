@@ -49,10 +49,18 @@ def predict_glucose_response(meals: pd.DataFrame, daily: pd.DataFrame) -> Dict:
         ]
         
         # Time-based features
-        time_features = [
-            meal['time'].hour if pd.notna(meal['time']) else 12,
-            meal['time'].minute if pd.notna(meal['time']) else 0
-        ]
+        if pd.notna(meal['time']):
+            try:
+                # Convert to datetime if it's a string
+                if isinstance(meal['time'], str):
+                    time_obj = pd.to_datetime(meal['time']).time()
+                else:
+                    time_obj = meal['time']
+                time_features = [time_obj.hour, time_obj.minute]
+            except:
+                time_features = [12, 0]  # Default to noon
+        else:
+            time_features = [12, 0]  # Default to noon
         
         features.append(meal_features + health_features + time_features)
         targets.append(meal['meal_auc'])

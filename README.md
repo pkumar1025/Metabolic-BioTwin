@@ -1,204 +1,154 @@
-# Metabolic-BioTwin 🏥
+# Metabolic BioTwin
 
-> **AI-Powered Personal Health Intelligence Platform**  
-> Transform fragmented health data into actionable, personalized insights through advanced machine learning and causal inference.
+AI-Powered Personal Health Intelligence Platform
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115.0-green.svg)](https://fastapi.tiangolo.com)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+Transform fragmented health data into actionable, personalized insights through advanced machine learning and causal inference.
 
-## 🎯 **Hackathon Challenge Solution**
-
-**Problem**: Health-conscious individuals are drowning in disconnected data from wearables, nutrition apps, and health monitors, making it impossible to see the bigger picture of their wellness.
-
-**Our Solution**: Metabolic-BioTwin unifies disparate health data streams to provide a single, holistic view with AI-powered correlation discovery, predictive modeling, and personalized recommendations.
-
-## ✨ **Key Features**
-
-### 🤖 **AI-Powered Correlation Discovery**
-- **Hidden Correlations**: Discover non-obvious relationships like "HRV affects next-day glucose response"
-- **Time-Lagged Analysis**: Find how past behaviors impact future health outcomes
-- **Statistical Rigor**: All correlations include p-values, confidence intervals, and sample sizes
-
-### 📊 **Predictive Health Modeling**
-- **Glucose Response Prediction**: ML model predicts meal glucose impact based on composition and health context
-- **Sleep Impact Forecasting**: Predict how sleep quality affects next-day metabolic markers
-- **7-Day Health Forecast**: Trend-based predictions for key health metrics
-
-### 🎯 **Personalized Health Scoring**
-- **Comprehensive Scoring**: Glucose control, sleep quality, recovery (HRV), nutrition, and activity
-- **Trend Analysis**: Track improvements or declines in each health domain
-- **Actionable Recommendations**: Priority-based suggestions with expected impact
-
-### 🔍 **Advanced Anomaly Detection**
-- **Statistical Detection**: Rolling median + MAD for robust anomaly identification
-- **Contextual Alerts**: Link anomalies to historical patterns and potential causes
-- **Intervention Suggestions**: Specific actions to address detected issues
-
-### 📈 **Unified Health Dashboard**
-- **Holistic Timeline**: Correlated view of sleep, activity, nutrition, and vitals
-- **Interactive Visualizations**: Beautiful, responsive charts with trend analysis
-- **Real-time Insights**: Dynamic updates as new data is ingested
-
-## 🚀 **Quick Start**
+## Quick Start
 
 ### Prerequisites
-- Python 3.8+
-- pip or conda
+- Python 3.8 or higher
+- pip package manager
 
-### Installation
+### Installation & Setup
 
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/Metabolic-BioTwin.git
+   cd Metabolic-BioTwin
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run the application**
+   ```bash
+   python -m uvicorn app.main:app --reload
+   ```
+
+4. **Open your browser**
+   Navigate to `http://localhost:8000`
+
+## How to Use
+
+### Option 1: Demo Data (Recommended for first-time users)
+1. Click "Get Started with Demo Data" on the homepage
+2. Explore the 6 dashboard tabs with pre-loaded sample data
+
+### Option 2: Upload Your Own Data
+1. Prepare CSV files with your health data (see supported formats below)
+2. Click "Upload Your Data" and select your CSV files
+3. The system will automatically process and analyze your data
+
+## Supported Data Formats
+
+### Required CSV Files
+Upload any combination of these data types:
+
+**Meals Data** (`meals.csv`)
+```csv
+date,time,carbs_g,protein_g,fat_g,fiber_g,calories
+2024-01-01,08:00,45,20,15,8,350
+2024-01-01,13:00,60,25,20,12,450
+```
+
+**Sleep Data** (`sleep.csv`)
+```csv
+date,sleep_hours,hrv,rhr
+2024-01-01,7.5,45,65
+2024-01-02,8.0,50,60
+```
+
+**Activity Data** (`activity.csv`)
+```csv
+date,steps,workout_min,hydration_l
+2024-01-01,8500,30,2.5
+2024-01-02,9200,45,3.0
+```
+
+**Vitals Data** (`vitals.csv`)
+```csv
+date,fg_fast_mgdl,weight,bp_systolic,bp_diastolic
+2024-01-01,95,70.5,120,80
+2024-01-02,92,70.2,118,78
+```
+
+### Flexible Column Names
+The system automatically recognizes various column naming conventions:
+- `date`, `Date`, `DATE`, `meal_date`, `timestamp`
+- `carbs_g`, `carbs`, `carbohydrates`, `carbs_grams`
+- `sleep_hours`, `sleep_duration`, `total_sleep`, `hours_slept`
+- And many more...
+
+## Dashboard Features
+
+### 1. Timeline
+- Health trends over time
+- Correlated visualizations of sleep, activity, nutrition, and vitals
+
+### 2. Meals
+- Detailed nutrition analysis
+- Meal-by-meal breakdown with glucose response predictions
+
+### 3. Insights
+- AI-generated actionable insights
+- Causal relationships and correlation discoveries
+
+### 4. Health Score
+- Personalized scoring across multiple health dimensions
+- Trend analysis and recommendations
+
+### 5. Predictions
+- ML-powered forecasting
+- Scenario modeling for different health choices
+
+### 6. Correlations
+- Hidden relationship discovery
+- Statistical analysis with confidence intervals
+
+## Technical Details
+
+### Architecture
+- **Backend**: FastAPI with Python 3.8+
+- **Frontend**: Plotly Dash for interactive visualizations
+- **ML**: Scikit-learn for machine learning models
+- **Data Processing**: Pandas for data manipulation
+
+### Key AI Features
+- **Causal Inference**: Doubly robust estimation for treatment effects
+- **Correlation Discovery**: Statistical analysis of health metric relationships
+- **Predictive Modeling**: Random Forest for glucose response prediction
+- **Anomaly Detection**: Rolling median + MAD for outlier identification
+- **Health Scoring**: Multi-dimensional health assessment
+
+## Troubleshooting
+
+### Common Issues
+
+**Port already in use**
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/Metabolic-BioTwin.git
-cd Metabolic-BioTwin
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the application
-python -m uvicorn app.main:app --reload
+# Use a different port
+python -m uvicorn app.main:app --reload --port 8001
 ```
 
-### Demo Experience
-
-1. **Visit** `http://localhost:8000`
-2. **Upload Your Data**: Drag & drop CSV files with your health data, or
-3. **Try Demo Data**: Click "Get Started with Demo Data" to explore with sample data
-4. **Explore** the 6 comprehensive tabs:
-   - **Timeline**: Health trends over time
-   - **Meals**: Detailed nutrition analysis
-   - **Insights**: AI-generated actionable insights
-   - **Health Score**: Personalized scoring and recommendations
-   - **Predictions**: ML-powered forecasting
-   - **Correlations**: Hidden relationship discovery
-
-## 📊 **Production-Ready Data Upload**
-
-### **Flexible CSV Format Handling**
-- **Smart Column Detection**: Automatically recognizes different column naming conventions
-- **Multiple Date Formats**: Supports various date/time formats (YYYY-MM-DD, MM/DD/YYYY, etc.)
-- **Data Type Auto-Detection**: Intelligently identifies meals, sleep, activity, and vitals data
-- **Missing Data Handling**: Robust interpolation and data quality reporting
-
-### **Supported Data Types**
-- **🍽️ Meals & Nutrition**: Carbs, protein, fat, fiber, calories with timestamps
-- **😴 Sleep Data**: Duration, quality, bedtime, wake time
-- **🏃 Activity & Exercise**: Steps, workout minutes, hydration
-- **💓 Vitals & Health**: Glucose, weight, blood pressure, heart rate
-
-### **Security & Validation**
-- **File Size Limits**: 10MB per file, 10 files per session
-- **Data Sanitization**: Automatic detection and masking of sensitive information
-- **Format Validation**: Real-time validation with helpful error messages
-- **Rate Limiting**: Protection against abuse and excessive requests
-
-## 🧠 **AI/ML Capabilities**
-
-### Causal Inference
-- **Doubly Robust Estimation**: Advanced causal analysis for treatment effects
-- **Confounder Control**: Account for multiple variables simultaneously
-- **Confidence Intervals**: Bootstrap-based uncertainty quantification
-
-### Machine Learning Models
-- **Random Forest Regression**: Glucose response prediction
-- **Linear Regression**: Sleep impact modeling
-- **Time Series Analysis**: Trend detection and forecasting
-
-### Statistical Analysis
-- **Correlation Discovery**: Spearman/Pearson with significance testing
-- **Anomaly Detection**: Rolling median + MAD with configurable thresholds
-- **Feature Engineering**: Meal AUC, peak calculations, nutritional ratios
-
-## 📊 **Data Integration**
-
-### Supported Data Sources
-- **Sleep**: Hours, HRV, resting heart rate
-- **Activity**: Steps, workout minutes, hydration
-- **Nutrition**: Macronutrients, meal timing, post-meal activity
-- **Vitals**: Fasting glucose, blood pressure, weight
-
-### Data Processing
-- **Temporal Alignment**: Automatic date normalization and interpolation
-- **Feature Engineering**: Advanced meal metrics and health ratios
-- **Quality Control**: Missing data handling and outlier detection
-
-## 🎯 **Target Audiences**
-
-### ✅ **Fitness Enthusiasts**
-- Optimize training and recovery through sleep-nutrition-performance correlations
-- Track how exercise impacts sleep quality and metabolic health
-- Personalized recommendations for performance optimization
-
-### ✅ **Health-Conscious Individuals**
-- Understand complex interactions between lifestyle factors
-- Make informed decisions based on personal data patterns
-- Track progress with comprehensive health scoring
-
-### ✅ **Chronic Condition Management**
-- Monitor glucose patterns with predictive insights
-- Identify triggers and optimize interventions
-- Track multiple health metrics in unified dashboard
-
-## 📈 **Success Metrics**
-
-### ✅ **Actionable Insights** (9/10)
-- Specific intervention suggestions with expected impact
-- Confidence levels help prioritize actions
-- Success metrics and duration for experiments
-
-### ✅ **Data Unification** (8/10)
-- Seamlessly combines 4+ data sources
-- Creates unified timeline view
-- Architecture ready for real API integrations
-
-### ✅ **Holistic View** (9/10)
-- Dashboard tells cohesive health story
-- Shows how sleep impacts next-day metabolic response
-- Visual correlations between different health metrics
-
-### ✅ **AI Application** (9/10)
-- Sophisticated causal inference using doubly robust estimation
-- Statistical correlation analysis with significance testing
-- Advanced predictive modeling and anomaly detection
-
-## 🛠 **Technical Architecture**
-
-```
-app/
-├── api/           # FastAPI endpoints
-│   ├── ingest.py  # Data ingestion and processing
-│   ├── insights.py # AI insights and analysis
-│   └── features.py # Data loading utilities
-├── ml/            # Machine learning modules
-│   ├── causal.py  # Causal inference
-│   ├── correlations.py # Correlation discovery
-│   ├── anomalies.py # Anomaly detection
-│   ├── predictive.py # Predictive modeling
-│   ├── health_score.py # Health scoring
-│   └── glycemic.py # Meal feature engineering
-├── ui/            # Dashboard interface
-│   └── dashboard.py # Interactive Dash app
-└── data/          # Demo data and storage
+**Missing dependencies**
+```bash
+# Reinstall requirements
+pip install -r requirements.txt --force-reinstall
 ```
 
-## 🔮 **Future Enhancements**
+**Data not loading**
+- Ensure CSV files have proper headers
+- Check that date columns are in a recognized format
+- Verify file size is under 10MB per file
 
-- **Real API Integrations**: Apple HealthKit, Google Fit, MyFitnessPal
-- **Expanded Health Metrics**: Blood pressure, stress, mood tracking
-- **Advanced AI**: Multi-variable correlation discovery, seasonal patterns
-- **Chronic Condition Support**: Medication tracking, provider communication
+### Getting Help
+- Check the console output for error messages
+- Ensure all required columns are present in your CSV files
+- Try the demo data first to verify the system is working
 
-## 📄 **License**
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🤝 **Contributing**
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
----
-
-**Built for the Personal Health & Wellness Aggregator Hackathon** ❤️‍
-
-*Transforming health data fragmentation into actionable intelligence through AI-powered analysis.*
+MIT License - see LICENSE file for details.
