@@ -196,7 +196,7 @@ def build_dash_app():
                 }
                 h1.header-compact {
                     margin: 0 0 12px 0;
-                    font-size: 4rem;
+                    font-size: 5.5rem;
                     font-weight: 900;
                     letter-spacing: -0.02em;
                     font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -222,7 +222,7 @@ def build_dash_app():
                 p.header-compact.tagline {
                     margin: 0;
                     opacity: 0.9;
-                    font-size: 1rem;
+                    font-size: 1.8rem;
                     font-weight: 500;
                     letter-spacing: 0.05em;
                     line-height: 1.2;
@@ -333,10 +333,10 @@ def build_dash_app():
                     background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
                     color: white;
                     border: none;
-                    padding: 16px 32px;
+                    padding: 20px 40px;
                     border-radius: 16px;
                     font-weight: 700;
-                    font-size: 1.1rem;
+                    font-size: 1.3rem;
                     cursor: pointer;
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                     box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4), 0 6px 15px rgba(16, 185, 129, 0.2);
@@ -385,6 +385,27 @@ def build_dash_app():
                     border-radius: 12px;
                     padding: 8px;
                     margin: 20px;
+                }
+                .tabs-container .tab {
+                    font-size: 1.4rem !important;
+                    font-weight: 600 !important;
+                    padding: 16px 24px !important;
+                    margin: 0 4px !important;
+                    border-radius: 8px !important;
+                    color: #6b7280 !important;
+                    background: transparent !important;
+                    border: none !important;
+                    transition: all 0.3s ease !important;
+                }
+                .tabs-container .tab--selected {
+                    background: white !important;
+                    color: #1f2937 !important;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+                    font-weight: 700 !important;
+                }
+                .tabs-container .tab:hover {
+                    background: rgba(255, 255, 255, 0.7) !important;
+                    color: #374151 !important;
                 }
                 .tab-content {
                     padding: 24px;
@@ -584,12 +605,15 @@ def build_dash_app():
                 }
                 .upload-section {
                     padding: 16px 20px;
+                    margin-top: 12px;
+                    text-align: center;
                 }
                 .upload-layout {
                     display: grid;
                     grid-template-columns: 1fr 1fr;
-                    gap: 24px;
+                    gap: 80px;
                     align-items: start;
+                    padding: 24px 0;
                 }
                 .upload-area {
                     width: 100%;
@@ -604,8 +628,10 @@ def build_dash_app():
                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
                     display: flex;
+                    flex-direction: column;
                     align-items: center;
                     justify-content: center;
+                    padding: 24px;
                 }
                 .upload-area:hover {
                     border-color: #3b82f6;
@@ -614,9 +640,9 @@ def build_dash_app():
                     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
                 }
                 .upload-icon {
-                    font-size: 2rem;
+                    font-size: 2.5rem;
                     color: #3b82f6;
-                    margin-bottom: 8px;
+                    margin-bottom: 10px;
                 }
                 .upload-title {
                     margin: 0 0 4px 0;
@@ -671,19 +697,26 @@ def build_dash_app():
                     color: #374151;
                     font-size: 1.1rem;
                     font-family: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                    padding: 8px 0;
+                    transition: all 0.3s ease;
+                    border-bottom: 1px solid #e5e7eb;
+                }
+                .format-guide summary:hover {
+                    color: #3b82f6;
+                    border-bottom-color: #3b82f6;
                 }
                 .format-guide-content {
-                    margin-top: 16px;
-                    padding: 20px;
+                    margin-top: 20px;
+                    padding: 24px;
                     background: #f9fafb;
                     border-radius: 12px;
                     border: 1px solid #e5e7eb;
-                    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+                    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
                 }
                 .format-guide-text {
-                    margin: 0 0 16px 0;
-                    color: #6b7280;
-                    font-size: 1rem;
+                    margin: 0 0 20px 0;
+                    color: #4b5563;
+                    font-size: 1.6rem;
                     font-weight: 500;
                 }
                 .format-list {
@@ -691,10 +724,10 @@ def build_dash_app():
                     padding-left: 24px;
                 }
                 .format-list li {
-                    margin: 8px 0;
-                    color: #6b7280;
-                    font-size: 0.95rem;
-                    font-weight: 400;
+                    margin: 12px 0;
+                    color: #374151;
+                    font-size: 1.4rem;
+                    font-weight: 500;
                 }
                 .demo-section {
                     text-align: center;
@@ -763,14 +796,14 @@ def build_dash_app():
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    padding: 12px 16px;
+                    padding: 16px 20px;
                     background: white;
                     border: 1px solid #e5e7eb;
                     border-radius: 8px;
                     text-decoration: none;
                     color: #374151;
-                    font-weight: 500;
-                    font-size: 0.9rem;
+                    font-weight: 600;
+                    font-size: 1.2rem;
                     transition: all 0.2s ease;
                     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
                 }
@@ -898,7 +931,7 @@ def build_dash_app():
                     }
                     .upload-area {
                         height: 100px;
-                        line-height: 100px;
+                        padding: 12px;
                     }
                     .upload-icon {
                         font-size: 1.5rem;
@@ -957,51 +990,51 @@ def build_dash_app():
             html.Div([
                 html.Div([
                     html.H2("Unifying Metabolic Health Data", 
-                           style={"textAlign":"center", "marginBottom":"32px", "marginTop":"0", "fontSize":"1.8rem", "fontWeight":"700", "color":"#1f2937", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"}),
+                           style={"textAlign":"center", "marginBottom":"50px", "marginTop":"0", "fontSize":"3.5rem", "fontWeight":"700", "color":"#1f2937", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"}),
                     
                     html.Div([
                         html.Div([
-                            html.H3("The Problem", className="card-title", style={"color":"#dc2626"}),
+                            html.H3("The Problem", className="card-title", style={"color":"#dc2626", "fontSize":"2.4rem"}),
                             html.P("Metabolic health data is scattered across glucose monitors, fitness trackers, and nutrition apps, making it impossible to understand how sleep, diet, and exercise impact your glucose response and metabolic function.", 
-                                   className="card-text")
+                                   className="card-text", style={"fontSize":"1.5rem"})
                         ], className="problem-card"),
                         
                         html.Div([
-                            html.H3("What Metabolic BioTwin Does", className="card-title", style={"color":"#059669"}),
+                            html.H3("What Metabolic BioTwin Does", className="card-title", style={"color":"#059669", "fontSize":"2.4rem"}),
                             html.P("Unifies data from all your health devices into one intelligent dashboard that predicts glucose spikes, discovers hidden patterns, and delivers actionable insights to optimize your metabolic health.", 
-                                   className="card-text")
+                                   className="card-text", style={"fontSize":"1.5rem"})
                         ], className="solution-card")
                     ], style={"display":"flex", "gap":"20px", "marginBottom":"24px"}),
                     
                     html.Div([
                         html.Div([
                             html.I(className="fas fa-brain feature-icon", style={"color":"#3b82f6"}),
-                            html.H4("AI Correlation Discovery", className="feature-title"),
-                            html.P([
-                                "AI discovers hidden patterns across all your health data. For instance, ",
-                                html.B("'On days you sleep less than 6 hours, your craving for high-sugar foods increases 30% the next afternoon'")
-                            ], className="feature-text")
+                                                            html.H4("AI Correlation Discovery", className="feature-title", style={"fontSize":"2.2rem"}),
+                                html.P([
+                                    "AI discovers hidden patterns across all your health data. For instance, ",
+                                    html.B("'On days you sleep less than 6 hours, your craving for high-sugar foods increases 30% the next afternoon'")
+                                ], className="feature-text", style={"fontSize":"1.5rem"})
                         ], className="feature-card-base"),
                         
                         html.Div([
                             html.I(className="fas fa-chart-line feature-icon", style={"color":"#10b981"}),
-                            html.H4("Unified Dashboard", className="feature-title"),
+                            html.H4("Unified Dashboard", className="feature-title", style={"fontSize":"2.2rem"}),
                             html.P([
                                 "Single dashboard unifies sleep, nutrition, activity & vitals to tell your complete health story. For instance, ",
                                 html.B("'Poor sleep last night led to 40% worse workout performance today'")
-                            ], className="feature-text")
+                            ], className="feature-text", style={"fontSize":"1.5rem"})
                         ], className="feature-card-base"),
                         
                         html.Div([
                             html.I(className="fas fa-exclamation-triangle feature-icon", style={"color":"#f59e0b"}),
-                            html.H4("Smart Alerts", className="feature-title"),
+                            html.H4("Smart Alerts", className="feature-title", style={"fontSize":"2.2rem"}),
                             html.P([
                                 "Learns your normal baselines and flags deviations with context. For instance, ",
                                 html.B("'Your resting heart rate elevated 3 consecutive days - previously correlated with high stress periods'")
-                            ], className="feature-text")
+                            ], className="feature-text", style={"fontSize":"1.5rem"})
                         ], className="feature-card-base")
                     ], style={"display":"flex", "gap":"16px"})
-                ], style={"maxWidth":"90%", "margin":"0 auto", "padding":"20px 20px"})
+                ], style={"maxWidth":"90%", "margin":"0 auto", "padding":"40px 40px"})
             ], style={"background":"#f8fafc", "borderBottom":"1px solid #e5e7eb"}),
 
             # Summary Metrics
@@ -1037,8 +1070,8 @@ def build_dash_app():
                             id='upload-data',
                             children=html.Div([
                                 html.I(className="fas fa-cloud-upload-alt upload-icon"),
-                                html.H3("Upload Your Health Data", className="upload-title"),
-                                html.P("Drag & drop CSV files or click to browse", className="upload-subtitle")
+                                html.H3("Upload Your Data", className="upload-title", style={"fontSize":"1.8rem", "fontWeight":"700", "marginTop":"8px"}),
+                                html.P("Drag & drop CSV files", className="upload-subtitle", style={"fontSize":"1.4rem", "fontWeight":"500", "marginTop":"8px"})
                             ]),
                             className="upload-area",
                             multiple=True
@@ -1047,21 +1080,28 @@ def build_dash_app():
                         # Upload Status
                         html.Div(id="upload-status", className="upload-status"),
                         
-                        # Demo Button
+                        # Demo Button - Enhanced for hackathon appeal
                         html.Div([
-                            html.Hr(className="demo-divider", style={"margin":"16px 0"}),
+                            html.Hr(className="demo-divider", style={"margin":"12px 0"}),
                             html.Div([
-                                html.Button("Sample with Demo Data", id="btn-demo", className="btn-primary"),
+                                html.Div([
+                                    html.I(className="fas fa-rocket", style={"fontSize":"1.8rem", "color":"#10b981", "marginRight":"12px"}),
+                                    html.Span("Try It Now", style={"fontSize":"1.4rem", "fontWeight":"600", "color":"#059669"})
+                                ], style={"marginBottom":"10px", "display":"flex", "alignItems":"center", "justifyContent":"center"}),
+                                html.Button("SAMPLE WITH DEMO DATA", id="btn-demo", className="btn-primary"),
                                 html.Div([
                                     html.I(className="fas fa-spinner fa-spin", style={"fontSize":"1.2rem", "color":"#10b981", "marginRight":"8px"}),
                                     html.Span("Loading...", style={"fontSize":"0.9rem", "color":"#6b7280"})
                                 ], id="loading-indicator", className="loading-inline"),
-                            ], style={"display":"flex", "alignItems":"center", "justifyContent":"center"}),
+                            ], style={"display":"flex", "flexDirection":"column", "alignItems":"center", "justifyContent":"center"}),
                             html.Div(id="ingest-status", style={"marginTop":"12px", "color":"#374151", "fontWeight":"500", "fontSize":"0.95rem", "textAlign":"center"}),
                             
-                            # Demo Data Files Section
+                            # Demo Data Files Section - Enhanced
                             html.Div([
-                                html.H4("View Demo Data Files", className="margin-bottom-8 text-lg font-weight-600 text-gray-700 font-inter", style={"textAlign":"center", "marginTop":"8px", "marginBottom":"16px"}),
+                                html.Div([
+                                    html.I(className="fas fa-download", style={"fontSize":"1.6rem", "color":"#3b82f6", "marginRight":"10px"}),
+                                    html.H4("Sample Data Files", className="margin-bottom-8 text-lg font-weight-600 text-gray-700 font-inter", style={"textAlign":"center", "marginTop":"8px", "marginBottom":"16px", "fontSize":"1.6rem", "display":"inline"})
+                                ], style={"textAlign":"center", "marginTop":"20px", "marginBottom":"20px"}),
                                 html.Div([
                                     html.A([
                                         html.I(className="fas fa-file-csv", style={"marginRight":"8px", "color":"#ef4444"}),
@@ -1121,23 +1161,22 @@ def build_dash_app():
                     
                     # Right Side - Info Panel
                     html.Div([
-                        html.H3("How It Works", className="side-panel-title"),
-                        html.P("Upload your metabolic data from glucose monitors, fitness trackers, and nutrition apps to get personalized AI insights.", className="side-panel-text"),
-                        html.P("Our system automatically detects and processes different data formats from glucose monitors, fitness trackers, and nutrition apps.", className="side-panel-text"),
+                        html.H3("How It Works", className="side-panel-title", style={"fontSize":"2.4rem", "fontWeight":"700"}),
+                        html.P("Upload your metabolic data from any health device and get instant AI-powered insights about your glucose response, sleep patterns, and metabolic health.", className="side-panel-text", style={"fontSize":"1.6rem", "fontWeight":"500", "color":"#1f2937", "lineHeight":"1.5"}),
                         
-                        # Data Format Guide
+                        # Data Format Guide - Professional and prominent
                         html.Details([
-                            html.Summary("Supported Data Formats"),
+                            html.Summary("Data Format Requirements", style={"fontSize":"1.5rem", "color":"#374151", "fontWeight":"600", "marginTop":"24px", "padding":"10px 0"}),
                             html.Div([
-                                html.P("Upload CSV files with health data. Supported formats:", className="format-guide-text"),
+                                html.P("CSV files with columns: date, time, and relevant metrics", className="format-guide-text"),
                                 html.Ul([
-                                    html.Li("🍽️ Meals: date, time, carbs_g, protein_g, fat_g"),
-                                    html.Li("😴 Sleep: date, sleep_hours, bedtime, wake_time"),
-                                    html.Li("🏃 Activity: date, steps, workout_min, hydration_l"),
-                                    html.Li("💓 Vitals: date, fg_fast_mgdl, weight, bp_systolic")
+                                    html.Li("Meals: carbs_g, protein_g, fat_g"),
+                                    html.Li("Sleep: sleep_hours, bedtime, wake_time"),
+                                    html.Li("Activity: steps, workout_min, hydration_l"),
+                                    html.Li("Vitals: fg_fast_mgdl, weight, bp_systolic")
                                 ], className="format-list")
                             ], className="format-guide-content")
-                        ], className="format-guide")
+                        ], className="format-guide", style={"marginTop":"12px"})
                     ], className="upload-side-panel")
                 ], className="upload-layout")
             ], className="upload-section"),
@@ -1203,7 +1242,6 @@ def build_dash_app():
         try:
             r = requests.post("http://localhost:8000/api/ingest", data={"use_demo": "true"})
             js = r.json()
-
             # Hide loading indicator and show success
             loading_style_hidden = {"display":"none"}
 
@@ -1386,9 +1424,9 @@ def build_dash_app():
                                 ], style={"width":"80px", "height":"80px", "background":"linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%)", "borderRadius":"50%", "margin":"0 auto 24px auto", "display":"flex", "flexDirection":"column", "alignItems":"center", "justifyContent":"center", "boxShadow":"0 0 30px rgba(59, 130, 246, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.1)", "border":"2px solid rgba(59, 130, 246, 0.2)"}),
                                 
                                 html.H4("Start Your Metabolic Health Journey", 
-                                        style={"margin":"0 0 16px 0", "color":"#1f2937", "fontWeight":"800", "fontSize":"1.6rem", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "textAlign":"center", "letterSpacing":"-0.03em", "background":"linear-gradient(135deg, #1f2937 0%, #374151 100%)", "WebkitBackgroundClip":"text", "WebkitTextFillColor":"transparent", "backgroundClip":"text"}),
+                                        style={"margin":"0 0 24px 0", "color":"#1f2937", "fontWeight":"800", "fontSize":"3.2rem", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "textAlign":"center", "letterSpacing":"-0.03em", "background":"linear-gradient(135deg, #1f2937 0%, #374151 100%)", "WebkitBackgroundClip":"text", "WebkitTextFillColor":"transparent", "backgroundClip":"text"}),
                                 html.P("Predict your glucose response and optimize metabolic health with AI-powered analysis.", 
-                                       style={"margin":"0 0 32px 0", "color":"#6b7280", "fontSize":"1.05rem", "fontFamily":"'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "textAlign":"center", "lineHeight":"1.7", "maxWidth":"70%", "margin":"0 auto 32px auto", "fontWeight":"500"}),
+                                       style={"margin":"0 0 48px 0", "color":"#6b7280", "fontSize":"1.7rem", "fontFamily":"'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "textAlign":"center", "lineHeight":"1.7", "maxWidth":"70%", "margin":"0 auto 48px auto", "fontWeight":"500"}),
 
                             ], style={"position":"relative", "zIndex":"2", "padding":"40px 32px", "textAlign":"center"})
                         ], style={"position":"relative", "background":"linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%)", "borderRadius":"28px", "border":"1px solid rgba(59, 130, 246, 0.1)", "boxShadow":"0 20px 40px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(59, 130, 246, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8)", "overflow":"hidden", "backdropFilter":"blur(10px)"}),
@@ -1565,9 +1603,9 @@ def build_dash_app():
             
             return html.Div([
                 html.Div([
-                    html.H3("Health Trends Over Time", style={"textAlign":"center", "marginBottom":"8px", "color":"#1f2937", "fontSize":"1.8rem", "fontWeight":"800", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "letterSpacing":"-0.02em"}),
-                    html.P("Track your key health metrics and discover patterns in your data", style={"textAlign":"center", "marginBottom":"16px", "color":"#6b7280", "fontSize":"1rem", "fontFamily":"'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "fontWeight":"500"})
-                ], style={"padding":"8px 0 6px 0"}),
+                    html.H3("Health Trends Over Time", style={"textAlign":"center", "marginBottom":"8px", "color":"#1f2937", "fontSize":"2.2rem", "fontWeight":"800", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "letterSpacing":"-0.02em"}),
+                    html.P("Track your key health metrics and discover patterns in your data", style={"textAlign":"center", "marginBottom":"16px", "color":"#6b7280", "fontSize":"1.2rem", "fontFamily":"'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "fontWeight":"500"})
+                ], style={"padding":"5px 0 5px 0"}),
                 dcc.Graph(figure=fig1, id="glucose-chart", config={'displayModeBar': True, 'displaylogo': False}),
                 html.Div(style={"height":"24px"}),  # Spacing
                 dcc.Graph(figure=fig2, id="sleep-chart", config={'displayModeBar': True, 'displaylogo': False}),
@@ -1689,8 +1727,6 @@ def build_dash_app():
                 ],
                 filter_action="native",
                 sort_action="native",
-                export_format="csv",
-                export_headers="display",
                 page_action="native",
                 page_current=0,
                 page_count=0,
@@ -1706,8 +1742,8 @@ def build_dash_app():
             # Compact header section
             controls = html.Div([
                 html.Div([
-                    html.H4("Meal Analysis", style={"margin":"0", "color":"#1f2937", "fontWeight":"700", "fontSize":"1.3rem"}),
-                    html.P("AI-powered nutritional insights and metabolic response tracking", style={"margin":"4px 0 0 0", "color":"#6b7280", "fontSize":"0.9rem"})
+                    html.H4("Meal Analysis", style={"margin":"0", "color":"#1f2937", "fontWeight":"700", "fontSize":"1.8rem"}),
+                    html.P("AI-powered nutritional insights and metabolic response tracking", style={"margin":"4px 0 0 0", "color":"#6b7280", "fontSize":"1.1rem"})
                 ], style={"flex":"1"}),
                 html.Div([
                     html.Button([
@@ -1731,8 +1767,8 @@ def build_dash_app():
                 "display":"flex",
                 "justifyContent":"space-between",
                 "alignItems":"center",
-                "marginBottom":"6px",
-                "padding":"6px 8px",
+                "marginBottom":"5px",
+                "padding":"5px 6px",
                 "background":"linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)",
                 "borderRadius":"8px",
                 "border":"1px solid #e2e8f0",
@@ -1743,18 +1779,18 @@ def build_dash_app():
             ai_summary = html.Div([
                 html.Div([
                     html.Div([
-                        html.H6("AI Analysis", style={"margin":"0 0 2px 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"0.8rem"}),
-                        html.P("Patterns detected: Late meals → 23% higher glucose spikes", style={"margin":"0", "color":"#059669", "fontSize":"0.7rem", "fontWeight":"500"})
-                    ], style={"flex":"1", "padding":"4px 6px", "background":"#f0fdf4", "borderRadius":"6px", "border":"1px solid #bbf7d0"}),
+                        html.H6("AI Analysis", style={"margin":"0 0 2px 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1rem"}),
+                        html.P("Patterns detected: Late meals → 23% higher glucose spikes", style={"margin":"0", "color":"#059669", "fontSize":"0.9rem", "fontWeight":"500"})
+                    ], style={"flex":"1", "padding":"6px 8px", "background":"#f0fdf4", "borderRadius":"6px", "border":"1px solid #bbf7d0"}),
                     html.Div([
-                        html.H6("Data Quality", style={"margin":"0 0 2px 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"0.8rem"}),
-                        html.P("237 meals analyzed • 94% completeness", style={"margin":"0", "color":"#3b82f6", "fontSize":"0.7rem", "fontWeight":"500"})
-                    ], style={"flex":"1", "padding":"4px 6px", "background":"#eff6ff", "borderRadius":"6px", "border":"1px solid #bfdbfe"}),
+                        html.H6("Data Quality", style={"margin":"0 0 2px 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1rem"}),
+                        html.P("237 meals analyzed • 94% completeness", style={"margin":"0", "color":"#3b82f6", "fontSize":"0.9rem", "fontWeight":"500"})
+                    ], style={"flex":"1", "padding":"6px 8px", "background":"#eff6ff", "borderRadius":"6px", "border":"1px solid #bfdbfe"}),
                     html.Div([
-                        html.H6("Actionable", style={"margin":"0 0 2px 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"0.8rem"}),
-                        html.P("3 personalized recommendations generated", style={"margin":"0", "color":"#7c3aed", "fontSize":"0.7rem", "fontWeight":"500"})
-                    ], style={"flex":"1", "padding":"4px 6px", "background":"#faf5ff", "borderRadius":"6px", "border":"1px solid #d8b4fe"})
-                ], style={"display":"flex", "gap":"6px", "marginBottom":"6px"})
+                        html.H6("Actionable", style={"margin":"0 0 2px 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1rem"}),
+                        html.P("3 personalized recommendations generated", style={"margin":"0", "color":"#7c3aed", "fontSize":"0.9rem", "fontWeight":"500"})
+                    ], style={"flex":"1", "padding":"6px 8px", "background":"#faf5ff", "borderRadius":"6px", "border":"1px solid #d8b4fe"})
+                ], style={"display":"flex", "gap":"4px", "marginBottom":"5px"})
             ])
             
             return html.Div([
@@ -1768,37 +1804,37 @@ def build_dash_app():
             # Hackathon-focused AI showcase header
             ai_showcase = html.Div([
                 html.Div([
-                    html.H3("AI-Powered Health Intelligence", style={"margin":"0 0 4px 0", "color":"#1f2937", "fontWeight":"800", "fontSize":"1.6rem", "textAlign":"center"}),
-                    html.P("Discover hidden patterns and get actionable insights from your metabolic data", style={"margin":"0 0 16px 0", "color":"#6b7280", "fontSize":"1rem", "textAlign":"center", "fontWeight":"500"})
-                ], style={"textAlign":"center", "marginBottom":"10px"}),
+                    html.H3("AI-Powered Health Intelligence", style={"margin":"0 0 4px 0", "color":"#1f2937", "fontWeight":"800", "fontSize":"2rem", "textAlign":"center"}),
+                    html.P("Discover hidden patterns and get actionable insights from your metabolic data", style={"margin":"0 0 16px 0", "color":"#6b7280", "fontSize":"1.2rem", "textAlign":"center", "fontWeight":"500"})
+                ], style={"textAlign":"center", "marginBottom":"5px"}),
                 
                 # AI Performance Metrics for Judges
                 html.Div([
                     html.Div([
                         html.Div([
-                            html.H4(f"{ij.get('ai_metrics', {}).get('correlations_discovered', 0)}", style={"margin":"0 0 2px 0", "color":"#059669", "fontWeight":"700", "fontSize":"1.8rem"}),
-                            html.P("Correlations Discovered", style={"margin":"0", "color":"#374151", "fontSize":"0.8rem", "fontWeight":"600"})
-                        ], style={"textAlign":"center", "padding":"8px", "background":"#f0fdf4", "borderRadius":"8px", "border":"1px solid #bbf7d0"})
+                            html.H4(f"{ij.get('ai_metrics', {}).get('correlations_discovered', 0)}", style={"margin":"0 0 2px 0", "color":"#059669", "fontWeight":"700", "fontSize":"2.2rem"}),
+                            html.P("Correlations Discovered", style={"margin":"0", "color":"#374151", "fontSize":"1rem", "fontWeight":"600"})
+                        ], style={"textAlign":"center", "padding":"5px", "background":"#f0fdf4", "borderRadius":"6px", "border":"1px solid #bbf7d0"})
                     ], style={"flex":"1"}),
                     html.Div([
                         html.Div([
-                            html.H4(f"{ij.get('ai_metrics', {}).get('causal_effects_found', 0)}", style={"margin":"0 0 2px 0", "color":"#3b82f6", "fontWeight":"700", "fontSize":"1.8rem"}),
-                            html.P("Causal Effects Found", style={"margin":"0", "color":"#374151", "fontSize":"0.8rem", "fontWeight":"600"})
-                        ], style={"textAlign":"center", "padding":"8px", "background":"#eff6ff", "borderRadius":"8px", "border":"1px solid #bfdbfe"})
+                            html.H4(f"{ij.get('ai_metrics', {}).get('causal_effects_found', 0)}", style={"margin":"0 0 2px 0", "color":"#3b82f6", "fontWeight":"700", "fontSize":"2.2rem"}),
+                            html.P("Causal Effects Found", style={"margin":"0", "color":"#374151", "fontSize":"1rem", "fontWeight":"600"})
+                        ], style={"textAlign":"center", "padding":"5px", "background":"#eff6ff", "borderRadius":"6px", "border":"1px solid #bfdbfe"})
                     ], style={"flex":"1"}),
                     html.Div([
                         html.Div([
-                            html.H4(f"{ij.get('ai_metrics', {}).get('anomalies_detected', 0)}", style={"margin":"0 0 2px 0", "color":"#dc2626", "fontWeight":"700", "fontSize":"1.8rem"}),
-                            html.P("Anomalies Detected", style={"margin":"0", "color":"#374151", "fontSize":"0.8rem", "fontWeight":"600"})
-                        ], style={"textAlign":"center", "padding":"8px", "background":"#fef2f2", "borderRadius":"8px", "border":"1px solid #fecaca"})
+                            html.H4(f"{ij.get('ai_metrics', {}).get('anomalies_detected', 0)}", style={"margin":"0 0 2px 0", "color":"#dc2626", "fontWeight":"700", "fontSize":"2.2rem"}),
+                            html.P("Anomalies Detected", style={"margin":"0", "color":"#374151", "fontSize":"1rem", "fontWeight":"600"})
+                        ], style={"textAlign":"center", "padding":"5px", "background":"#fef2f2", "borderRadius":"6px", "border":"1px solid #fecaca"})
                     ], style={"flex":"1"}),
                     html.Div([
                         html.Div([
-                            html.H4(f"{ij.get('data_quality', {}).get('total_data_points', 0)}", style={"margin":"0 0 2px 0", "color":"#7c3aed", "fontWeight":"700", "fontSize":"1.8rem"}),
-                            html.P("Data Points Processed", style={"margin":"0", "color":"#374151", "fontSize":"0.8rem", "fontWeight":"600"})
-                        ], style={"textAlign":"center", "padding":"8px", "background":"#faf5ff", "borderRadius":"8px", "border":"1px solid #d8b4fe"})
+                            html.H4(f"{ij.get('data_quality', {}).get('total_data_points', 0)}", style={"margin":"0 0 2px 0", "color":"#7c3aed", "fontWeight":"700", "fontSize":"2.2rem"}),
+                            html.P("Data Points Processed", style={"margin":"0", "color":"#374151", "fontSize":"1rem", "fontWeight":"600"})
+                        ], style={"textAlign":"center", "padding":"5px", "background":"#faf5ff", "borderRadius":"6px", "border":"1px solid #d8b4fe"})
                     ], style={"flex":"1"})
-                ], style={"display":"flex", "gap":"8px", "marginBottom":"10px"})
+                ], style={"display":"flex", "gap":"6px", "marginBottom":"5px"})
             ])
             
             cards = [ai_showcase]
