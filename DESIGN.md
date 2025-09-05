@@ -261,6 +261,3 @@ Metabolic BioTwin represents a new approach to personal health technology, combi
 
 The modular architecture and focus on user experience make it easy to extend and improve, while the privacy-first approach ensures user data remains secure and under their control.
 
----
-
-*This design document serves as a living guide for the development and evolution of Metabolic BioTwin. It should be updated as the platform grows and new features are added.*
