@@ -435,6 +435,124 @@ def build_dash_app():
                     border-radius: 0.5vw;
                     margin-top: 0.05vw;
                 }
+                .meals-table-container {
+                    overflow-x: auto;
+                    width: 100%;
+                    max-width: 100%;
+                }
+                /* Dash DataTable Pagination Styling - Optimized for Single Line */
+                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .dash-table-toolbar,
+                .dash-table-container .dash-table-toolbar,
+                .dash-table-toolbar {
+                    padding: 1vw 3vw !important;
+                    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+                    border-radius: 0.6vw !important;
+                    margin-bottom: 0.8vw !important;
+                    min-height: 2vw !important;
+                    font-size: 1.2vw !important;
+                    width: 100% !important;
+                    max-width: none !important;
+                }
+                
+                /* Target all possible pagination text elements */
+                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .dash-table-toolbar .dash-table-paging,
+                .dash-table-container .dash-table-toolbar .dash-table-paging,
+                .dash-table-toolbar .dash-table-paging,
+                .dash-table-paging,
+                .previous-next-container {
+                    font-size: 1.5vw !important;
+                    font-weight: 600 !important;
+                    color: #1f2937 !important;
+                    font-family: 'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+                    text-align: center !important;
+                    line-height: 1.2 !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    gap: 0.5vw !important;
+                    width: 100% !important;
+                    overflow: visible !important;
+                    white-space: nowrap !important;
+                    min-width: 20vw !important;
+                    padding: 0.3vw 0.8vw !important;
+                    flex-wrap: nowrap !important;
+                }
+                
+                /* Fix for page number display - ensure full text is visible */
+                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .dash-table-toolbar .dash-table-paging *,
+                .dash-table-container .dash-table-toolbar .dash-table-paging *,
+                .dash-table-toolbar .dash-table-paging *,
+                .dash-table-paging *,
+                .previous-next-container * {
+                    font-size: 1.5vw !important;
+                    font-weight: 600 !important;
+                    color: #1f2937 !important;
+                    margin: 0 !important;
+                    padding: 0.2vw 0.4vw !important;
+                    display: inline-block !important;
+                    white-space: nowrap !important;
+                    overflow: visible !important;
+                }
+                
+                
+                /* Target all possible pagination buttons */
+                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .dash-table-toolbar .dash-table-paging button,
+                .dash-table-container .dash-table-toolbar .dash-table-paging button,
+                .dash-table-toolbar .dash-table-paging button,
+                .dash-table-paging button,
+                .previous-next-container button,
+                .previous-page,
+                .next-page,
+                .first-page,
+                .last-page {
+                    font-size: 1.2vw !important;
+                    font-weight: 600 !important;
+                    padding: 0.5vw 0.8vw !important;
+                    margin: 0 0.3vw !important;
+                    border-radius: 0.4vw !important;
+                    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+                    color: white !important;
+                    border: none !important;
+                    box-shadow: 0 0.15vw 0.5vw rgba(59, 130, 246, 0.3) !important;
+                    transition: all 0.3s ease !important;
+                    min-width: 2vw !important;
+                    min-height: 2vw !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    cursor: pointer !important;
+                    flex-shrink: 0 !important;
+                }
+                
+                /* Hover effects for all pagination buttons */
+                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .dash-table-toolbar .dash-table-paging button:hover,
+                .dash-table-container .dash-table-toolbar .dash-table-paging button:hover,
+                .dash-table-toolbar .dash-table-paging button:hover,
+                .dash-table-paging button:hover,
+                .previous-next-container button:hover,
+                .previous-page:hover,
+                .next-page:hover,
+                .first-page:hover,
+                .last-page:hover {
+                    transform: translateY(-0.08vw) !important;
+                    box-shadow: 0 0.3vw 0.8vw rgba(59, 130, 246, 0.4) !important;
+                }
+                
+                /* Disabled state for all pagination buttons */
+                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner .dash-table-toolbar .dash-table-paging button:disabled,
+                .dash-table-container .dash-table-toolbar .dash-table-paging button:disabled,
+                .dash-table-toolbar .dash-table-paging button:disabled,
+                .dash-table-paging button:disabled,
+                .previous-next-container button:disabled,
+                .previous-page:disabled,
+                .next-page:disabled,
+                .first-page:disabled,
+                .last-page:disabled {
+                    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%) !important;
+                    box-shadow: 0 0.08vw 0.3vw rgba(156, 163, 175, 0.2) !important;
+                    cursor: not-allowed !important;
+                    transform: none !important;
+                }
                 .insight-card {
                     background: white;
                     border-radius: 1vw;
@@ -771,7 +889,7 @@ def build_dash_app():
                 .format-guide-text {
                     margin: 0 0 1.25vw 0;
                     color: #4b5563;
-                    font-size: 2.2rem;
+                    font-size: 1.4vw;
                     font-weight: 500;
                 }
                 .format-list {
@@ -781,7 +899,7 @@ def build_dash_app():
                 .format-list li {
                     margin: 0.75vw 0;
                     color: #374151;
-                    font-size: 2rem;
+                    font-size: 1.2vw;
                     font-weight: 500;
                 }
                 .demo-section {
@@ -1178,8 +1296,8 @@ def build_dash_app():
                             id='upload-data',
                             children=html.Div([
                                 html.I(className="fas fa-cloud-upload-alt upload-icon"),
-                                html.H3("Upload Your Data", className="upload-title", style={"fontSize":"1.125vw", "fontWeight":"700", "marginTop":"0.5vw"}),
-                                html.P("Drag & drop CSV files", className="upload-subtitle", style={"fontSize":"0.875vw", "fontWeight":"500", "marginTop":"0.5vw"})
+                                html.H3("Upload Your Data", className="upload-title", style={"fontSize":"1.8vw", "fontWeight":"700", "marginTop":"0.5vw"}),
+                                html.P("Drag & drop CSV files", className="upload-subtitle", style={"fontSize":"1.2vw", "fontWeight":"500", "marginTop":"0.5vw"})
                             ]),
                             className="upload-area",
                             multiple=True
@@ -1229,42 +1347,7 @@ def build_dash_app():
                                     ], href="http://localhost:8000/data/demo/activity.csv", target="_blank", className="demo-file-link")
                                 ], className="demo-files-grid")
                             ], className="demo-files-section")
-                        ], className="demo-section"),
-                        
-                        # AI Processing Demo
-                        html.Div([
-                            html.H4("AI Processing Demo", className="margin-bottom-8 text-lg font-weight-600 text-gray-700 font-inter", style={"textAlign":"center", "marginTop":"1.25vw", "marginBottom":"1.5vw", "fontSize":"1.375vw", "fontWeight":"800", "color":"#1f2937"}),
-                            html.Div([
-                                html.Div([
-                                    html.Div([
-                                        html.I(className="fas fa-upload", style={"marginRight":"1vw", "color":"#3b82f6", "fontSize":"1.375vw"}),
-                                        html.Span("Data Ingestion", className="font-weight-600")
-                                    ], className="processing-step"),
-                                    html.Div("Loading 4 CSV files...", className="processing-status", id="processing-status-1")
-                                ], className="processing-item"),
-                                html.Div([
-                                    html.Div([
-                                        html.I(className="fas fa-cogs", style={"marginRight":"1vw", "color":"#10b981", "fontSize":"1.375vw"}),
-                                        html.Span("Data Processing", className="font-weight-600")
-                                    ], className="processing-step"),
-                                    html.Div("Normalizing and validating data...", className="processing-status", id="processing-status-2")
-                                ], className="processing-item"),
-                                html.Div([
-                                    html.Div([
-                                        html.I(className="fas fa-brain", style={"marginRight":"1vw", "color":"#f59e0b", "fontSize":"1.375vw"}),
-                                        html.Span("AI Analysis", className="font-weight-600")
-                                    ], className="processing-step"),
-                                    html.Div("Discovering correlations...", className="processing-status", id="processing-status-3")
-                                ], className="processing-item"),
-                                html.Div([
-                                    html.Div([
-                                        html.I(className="fas fa-chart-line", style={"marginRight":"1vw", "color":"#ef4444", "fontSize":"1.375vw"}),
-                                        html.Span("Insights Generation", className="font-weight-600")
-                                    ], className="processing-step"),
-                                    html.Div("Generating personalized insights...", className="processing-status", id="processing-status-4")
-                                ], className="processing-item")
-                            ], className="processing-demo", id="processing-demo")
-                        ], className="processing-section", id="processing-section", style={"display":"none"})
+                        ], className="demo-section")
                     ]),
                     
                     # Right Side - Info Panel
@@ -1572,55 +1655,55 @@ def build_dash_app():
             ))
             
             # Add optimal range shading
-            fig1.add_hrect(y0=80, y1=100, fillcolor="rgba(34, 197, 94, 0.1)", 
-                          annotation_text="Healthy Range (80-100 mg/dL)", 
+            fig1.add_hrect(y0=80, y1=100, fillcolor="rgba(34, 197, 94, 0.25)", 
+                          annotation_text="", 
                           annotation_position="top left",
                           line_width=0)
             
             fig1.update_layout(
-                height=500,
-                margin=dict(l=100, r=50, t=100, b=80),
+                height=700,
+                margin=dict(l=140, r=90, t=180, b=140),
                 template="plotly_white",
                 hovermode="x unified",
                 legend=dict(
                     orientation="h", 
                     yanchor="bottom", 
-                    y=1.02, 
+                    y=0.95, 
                     xanchor="center", 
                     x=0.5,
                     bgcolor="rgba(255,255,255,0.95)",
-                    bordercolor="rgba(0,0,0,0.1)",
+                    bordercolor="rgba(0,0,0,0.2)",
                     borderwidth=2,
-                    font=dict(size=16, color="#374151", family="Inter, sans-serif")
+                    font=dict(size=48, color="#374151", family="Inter, sans-serif")
                 ),
                 xaxis=dict(
                     showgrid=True,
                     gridcolor="rgba(0,0,0,0.08)",
                     title="Date",
-                    titlefont=dict(size=18, color="#374151", family="Inter, sans-serif"),
-                    tickfont=dict(size=1.4, color="#6b7280", family="Inter, sans-serif"),  # 1.4vw equivalent
+                    titlefont=dict(size=52, color="#374151", family="Inter, sans-serif"),
+                    tickfont=dict(size=40, color="#6b7280", family="Inter, sans-serif"),
                     showline=True,
                     linewidth=2,
                     linecolor="rgba(0,0,0,0.1)"
                 ),
                 yaxis=dict(
-                    title="Fasting Glucose (milligrams per deciliter)",
-                    titlefont=dict(size=1.8, color="#374151", family="Inter, sans-serif"),  # 1.8vw equivalent
+                    title="Fasting Glucose (mg/dL)",
+                    titlefont=dict(size=48, color="#374151", family="Inter, sans-serif"),
                     showgrid=True,
                     gridcolor="rgba(0,0,0,0.08)",
                     zeroline=False,
                     range=[70, 120],
-                    tickfont=dict(size=1.4, color="#6b7280", family="Inter, sans-serif"),  # 1.4vw equivalent
+                    tickfont=dict(size=32, color="#6b7280", family="Inter, sans-serif"),
                     showline=True,
                     linewidth=2,
                     linecolor="rgba(0,0,0,0.1)"
                 ),
                 plot_bgcolor="rgba(0,0,0,0)",
                 paper_bgcolor="rgba(0,0,0,0)",
-                font=dict(family="Inter, sans-serif", size=1.5),  # 1.5vw equivalent
+                font=dict(family="Inter, sans-serif", size=36),
                 title=dict(
                     text="Daily Fasting Glucose Levels",
-                    font=dict(size=2.2, color="#1f2937", family="Inter, sans-serif"),  # 2.2vw equivalent
+                    font=dict(size=64, color="#1f2937", family="Inter, sans-serif"),
                     x=0.5,
                     xanchor="center"
                 ),
@@ -1659,55 +1742,55 @@ def build_dash_app():
             ))
             
             # Add optimal sleep range shading
-            fig2.add_hrect(y0=7, y1=9, fillcolor="rgba(34, 197, 94, 0.1)", 
-                          annotation_text="Recommended Sleep (7-9 hours)", 
+            fig2.add_hrect(y0=7, y1=9, fillcolor="rgba(34, 197, 94, 0.25)", 
+                          annotation_text="", 
                           annotation_position="top left",
                           line_width=0)
             
             fig2.update_layout(
-                height=500,
-                margin=dict(l=100, r=50, t=100, b=80),
+                height=700,
+                margin=dict(l=140, r=90, t=180, b=140),
                 template="plotly_white",
                 hovermode="x unified",
                 legend=dict(
                     orientation="h", 
                     yanchor="bottom", 
-                    y=1.02, 
+                    y=0.95, 
                     xanchor="center", 
                     x=0.5,
                     bgcolor="rgba(255,255,255,0.95)",
-                    bordercolor="rgba(0,0,0,0.1)",
+                    bordercolor="rgba(0,0,0,0.2)",
                     borderwidth=2,
-                    font=dict(size=16, color="#374151", family="Inter, sans-serif")
+                    font=dict(size=48, color="#374151", family="Inter, sans-serif")
                 ),
                 xaxis=dict(
                     showgrid=True,
                     gridcolor="rgba(0,0,0,0.08)",
                     title="Date",
-                    titlefont=dict(size=18, color="#374151", family="Inter, sans-serif"),
-                    tickfont=dict(size=1.4, color="#6b7280", family="Inter, sans-serif"),  # 1.4vw equivalent
+                    titlefont=dict(size=52, color="#374151", family="Inter, sans-serif"),
+                    tickfont=dict(size=40, color="#6b7280", family="Inter, sans-serif"),
                     showline=True,
                     linewidth=2,
                     linecolor="rgba(0,0,0,0.1)"
                 ),
                 yaxis=dict(
                     title="Sleep Hours",
-                    titlefont=dict(size=1.8, color="#374151", family="Inter, sans-serif"),  # 1.8vw equivalent
+                    titlefont=dict(size=48, color="#374151", family="Inter, sans-serif"),
                     showgrid=True,
                     gridcolor="rgba(0,0,0,0.08)",
                     zeroline=False,
                     range=[5, 10],
-                    tickfont=dict(size=1.4, color="#6b7280", family="Inter, sans-serif"),  # 1.4vw equivalent
+                    tickfont=dict(size=32, color="#6b7280", family="Inter, sans-serif"),
                     showline=True,
                     linewidth=2,
                     linecolor="rgba(0,0,0,0.1)"
                 ),
                 plot_bgcolor="rgba(0,0,0,0)",
                 paper_bgcolor="rgba(0,0,0,0)",
-                font=dict(family="Inter, sans-serif", size=1.5),  # 1.5vw equivalent
+                font=dict(family="Inter, sans-serif", size=36),
                 title=dict(
                     text="Daily Sleep Duration",
-                    font=dict(size=2.2, color="#1f2937", family="Inter, sans-serif"),  # 2.2vw equivalent
+                    font=dict(size=64, color="#1f2937", family="Inter, sans-serif"),
                     x=0.5,
                     xanchor="center"
                 ),
@@ -1733,9 +1816,9 @@ def build_dash_app():
             return html.Div([
                 # Header Section
                 html.Div([
-                    html.H3("Health Trends & Patterns", style={"textAlign":"center", "marginBottom":"0.5vw", "color":"#1f2937", "fontSize":"3.2vw", "fontWeight":"800", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "letterSpacing":"-0.02em"}),
-                    html.P("Track your glucose levels and sleep patterns to understand how daily habits affect your metabolic health", style={"textAlign":"center", "marginBottom":"1vw", "color":"#6b7280", "fontSize":"1.3vw", "fontFamily":"'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "fontWeight":"500"})
-                ], style={"padding":"0.2vw 0", "marginBottom":"0.2vw"}),
+                    html.H3("Health Trends & Patterns", style={"textAlign":"center", "marginBottom":"0.75vw", "color":"#1f2937", "fontSize":"2.5vw", "fontWeight":"800", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "letterSpacing":"-0.02em"}),
+                    html.P("Track your glucose levels and sleep patterns to understand how daily habits affect your metabolic health", style={"textAlign":"center", "marginBottom":"2vw", "color":"#6b7280", "fontSize":"1.6vw", "fontFamily":"'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", "fontWeight":"500", "lineHeight":"1.4"})
+                ], style={"padding":"1.5vw 0", "marginBottom":"1vw", "background":"linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", "borderRadius":"1.25vw", "border":"0.0625vw solid #e2e8f0"}),
                 
                 # Glucose Chart Container
                 html.Div([
@@ -1747,20 +1830,36 @@ def build_dash_app():
                         'toImageButtonOptions': {
                             'format': 'png',
                             'filename': 'glucose_trends',
-                            'height': 500,
-                            'width': 1200,
+                            'height': 700,
+                            'width': 1400,
                             'scale': 2
                         }
                     })
-                ], style={"background":"white", "borderRadius":"1.25vw", "boxShadow":"0 0.75vw 2vw rgba(0, 0, 0, 0.15)", "padding":"1.5vw", "marginBottom":"1.5vw", "border":"0.125vw solid rgba(0, 0, 0, 0.05)"}),
+                ], style={"background":"white", "borderRadius":"1.25vw", "boxShadow":"0 0.75vw 2vw rgba(0, 0, 0, 0.15)", "padding":"1vw", "marginBottom":"2vw", "border":"0.125vw solid rgba(0, 0, 0, 0.05)"}),
                 
                 # Glucose Chart Context
                 html.Div([
-                    html.H4("Understanding Your Glucose Levels", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontSize":"1.3vw", "fontWeight":"600"}),
-                    html.P("• Green zone (80-100 mg/dL): Optimal fasting glucose levels", style={"margin":"0 0 0.25vw 0", "color":"#6b7280", "fontSize":"1vw"}),
-                    html.P("• Red line: Your daily readings show natural variation", style={"margin":"0 0 0.25vw 0", "color":"#6b7280", "fontSize":"1vw"}),
-                    html.P("• Dark red line: 7-day average helps identify trends", style={"margin":"0", "color":"#6b7280", "fontSize":"1vw"})
-                ], style={"background":"#f8fafc", "padding":"1vw", "borderRadius":"0.75vw", "marginBottom":"1.5vw", "border":"0.0625vw solid #e5e7eb"}),
+                    html.H4("Understanding Your Glucose Levels", style={"margin":"0 0 1vw 0", "color":"#1f2937", "fontSize":"1.8vw", "fontWeight":"700", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"}),
+                    html.Div([
+                        html.Div([
+                            html.I(className="fas fa-circle", style={"color":"#ef4444", "marginRight":"0.75vw", "fontSize":"0.8vw"}),
+                            html.Span("Daily Readings", style={"fontWeight":"600", "color":"#374151", "fontSize":"1.3vw"})
+                        ], style={"display":"flex", "alignItems":"center", "marginBottom":"0.75vw"}),
+                        html.P("Your daily fasting glucose measurements show natural day-to-day variation", style={"margin":"0 0 0.75vw 0", "color":"#6b7280", "fontSize":"1.2vw", "paddingLeft":"1.75vw", "lineHeight":"1.4"}),
+                        
+                        html.Div([
+                            html.I(className="fas fa-circle", style={"color":"#dc2626", "marginRight":"0.75vw", "fontSize":"0.8vw"}),
+                            html.Span("7-Day Average", style={"fontWeight":"600", "color":"#374151", "fontSize":"1.3vw"})
+                        ], style={"display":"flex", "alignItems":"center", "marginBottom":"0.75vw"}),
+                        html.P("Smoother trend line helps identify longer-term patterns and changes", style={"margin":"0 0 0.75vw 0", "color":"#6b7280", "fontSize":"1.2vw", "paddingLeft":"1.75vw", "lineHeight":"1.4"}),
+                        
+                        html.Div([
+                            html.I(className="fas fa-check-circle", style={"color":"#10b981", "marginRight":"0.75vw", "fontSize":"0.8vw"}),
+                            html.Span("Optimal Range", style={"fontWeight":"600", "color":"#374151", "fontSize":"1.3vw"})
+                        ], style={"display":"flex", "alignItems":"center", "marginBottom":"0.75vw"}),
+                        html.P("Green zone (80-100 mg/dL) represents healthy fasting glucose levels", style={"margin":"0", "color":"#6b7280", "fontSize":"1.2vw", "paddingLeft":"1.75vw", "lineHeight":"1.4"})
+                    ])
+                ], style={"background":"linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)", "padding":"1.5vw", "borderRadius":"1vw", "marginBottom":"2vw", "border":"0.125vw solid #fca5a5", "boxShadow":"0 0.25vw 0.75vw rgba(239, 68, 68, 0.1)"}),
                 
                 # Sleep Chart Container
                 html.Div([
@@ -1772,25 +1871,72 @@ def build_dash_app():
                         'toImageButtonOptions': {
                             'format': 'png',
                             'filename': 'sleep_trends',
-                            'height': 500,
-                            'width': 1200,
+                            'height': 700,
+                            'width': 1400,
                             'scale': 2
                         }
                     })
-                ], style={"background":"white", "borderRadius":"1.25vw", "boxShadow":"0 0.75vw 2vw rgba(0, 0, 0, 0.15)", "padding":"1.5vw", "marginBottom":"1.5vw", "border":"0.125vw solid rgba(0, 0, 0, 0.05)"}),
+                ], style={"background":"white", "borderRadius":"1.25vw", "boxShadow":"0 0.75vw 2vw rgba(0, 0, 0, 0.15)", "padding":"1vw", "marginBottom":"2vw", "border":"0.125vw solid rgba(0, 0, 0, 0.05)"}),
                 
                 # Sleep Chart Context
                 html.Div([
-                    html.H4("Understanding Your Sleep Patterns", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontSize":"1.3vw", "fontWeight":"600"}),
-                    html.P("• Green zone (7-9 hours): Recommended sleep duration for adults", style={"margin":"0 0 0.25vw 0", "color":"#6b7280", "fontSize":"1vw"}),
-                    html.P("• Blue line: Your daily sleep hours show natural variation", style={"margin":"0 0 0.25vw 0", "color":"#6b7280", "fontSize":"1vw"}),
-                    html.P("• Dark blue line: 7-day average helps identify sleep trends", style={"margin":"0", "color":"#6b7280", "fontSize":"1vw"})
-                ], style={"background":"#f0f9ff", "padding":"1vw", "borderRadius":"0.75vw", "marginBottom":"1.5vw", "border":"0.0625vw solid #bae6fd"}),
+                    html.H4("Understanding Your Sleep Patterns", style={"margin":"0 0 1vw 0", "color":"#1f2937", "fontSize":"1.8vw", "fontWeight":"700", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"}),
+                    html.Div([
+                        html.Div([
+                            html.I(className="fas fa-circle", style={"color":"#3b82f6", "marginRight":"0.75vw", "fontSize":"0.8vw"}),
+                            html.Span("Daily Sleep Hours", style={"fontWeight":"600", "color":"#374151", "fontSize":"1.3vw"})
+                        ], style={"display":"flex", "alignItems":"center", "marginBottom":"0.75vw"}),
+                        html.P("Your nightly sleep duration shows natural variation based on lifestyle and recovery needs", style={"margin":"0 0 0.75vw 0", "color":"#6b7280", "fontSize":"1.2vw", "paddingLeft":"1.75vw", "lineHeight":"1.4"}),
+                        
+                        html.Div([
+                            html.I(className="fas fa-circle", style={"color":"#1d4ed8", "marginRight":"0.75vw", "fontSize":"0.8vw"}),
+                            html.Span("7-Day Average", style={"fontWeight":"600", "color":"#374151", "fontSize":"1.3vw"})
+                        ], style={"display":"flex", "alignItems":"center", "marginBottom":"0.75vw"}),
+                        html.P("Smoother trend line reveals your overall sleep patterns and consistency", style={"margin":"0 0 0.75vw 0", "color":"#6b7280", "fontSize":"1.2vw", "paddingLeft":"1.75vw", "lineHeight":"1.4"}),
+                        
+                        html.Div([
+                            html.I(className="fas fa-check-circle", style={"color":"#10b981", "marginRight":"0.75vw", "fontSize":"0.8vw"}),
+                            html.Span("Optimal Range", style={"fontWeight":"600", "color":"#374151", "fontSize":"1.3vw"})
+                        ], style={"display":"flex", "alignItems":"center", "marginBottom":"0.75vw"}),
+                        html.P("Green zone (7-9 hours) is the recommended sleep duration for optimal health", style={"margin":"0", "color":"#6b7280", "fontSize":"1.2vw", "paddingLeft":"1.75vw", "lineHeight":"1.4"})
+                    ])
+                ], style={"background":"linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", "padding":"1.5vw", "borderRadius":"1vw", "marginBottom":"2vw", "border":"0.125vw solid #93c5fd", "boxShadow":"0 0.25vw 0.75vw rgba(59, 130, 246, 0.1)"}),
                 
-                # Correlation Insight Container
+                # Key Insights & Recommendations Section
                 html.Div([
-                    html.P(correlation_text, style={"textAlign":"center", "margin":"0", "color":"#059669", "fontSize":"1.4vw", "fontWeight":"600", "padding":"2vw 2.5vw", "background":"rgba(16, 185, 129, 0.1)", "borderRadius":"1.25vw", "border":"0.125vw solid rgba(16, 185, 129, 0.2)"})
-                ]) if correlation_text else html.Div()
+                    html.H4("Key Insights & Recommendations", style={"textAlign":"center", "margin":"0 0 1.5vw 0", "color":"#1f2937", "fontSize":"2vw", "fontWeight":"700", "fontFamily":"'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"}),
+                    
+                    # Correlation Insight
+                    html.Div([
+                        html.Div([
+                            html.I(className="fas fa-lightbulb", style={"color":"#f59e0b", "fontSize":"1.5vw", "marginRight":"1vw"}),
+                            html.H5("Pattern Discovery", style={"margin":"0", "color":"#1f2937", "fontSize":"1.5vw", "fontWeight":"700"})
+                        ], style={"display":"flex", "alignItems":"center", "marginBottom":"0.75vw"}),
+                        html.P(correlation_text, style={"margin":"0", "color":"#6b7280", "fontSize":"1.3vw", "lineHeight":"1.4"})
+                    ], style={"background":"linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)", "padding":"1.5vw", "borderRadius":"0.75vw", "border":"0.125vw solid #fbbf24", "marginBottom":"1.5vw"}) if correlation_text else html.Div(),
+                    
+                    # Actionable Recommendations Grid
+                    html.Div([
+                        html.Div([
+                            html.I(className="fas fa-chart-line", style={"color":"#3b82f6", "fontSize":"1.2vw", "marginBottom":"0.75vw"}),
+                            html.H6("Track Trends", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontSize":"1.2vw", "fontWeight":"600"}),
+                            html.P("Monitor your 7-day averages to identify long-term patterns and early warning signs", style={"margin":"0", "color":"#6b7280", "fontSize":"1vw", "lineHeight":"1.4"})
+                        ], style={"textAlign":"center", "padding":"1.25vw", "background":"white", "borderRadius":"0.75vw", "border":"0.0625vw solid #e5e7eb", "boxShadow":"0 0.125vw 0.375vw rgba(0, 0, 0, 0.05)"}),
+                        
+                        html.Div([
+                            html.I(className="fas fa-target", style={"color":"#10b981", "fontSize":"1.2vw", "marginBottom":"0.75vw"}),
+                            html.H6("Stay in Range", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontSize":"1.2vw", "fontWeight":"600"}),
+                            html.P("Aim to keep glucose in the 80-100 mg/dL range and sleep 7-9 hours nightly", style={"margin":"0", "color":"#6b7280", "fontSize":"1vw", "lineHeight":"1.4"})
+                        ], style={"textAlign":"center", "padding":"1.25vw", "background":"white", "borderRadius":"0.75vw", "border":"0.0625vw solid #e5e7eb", "boxShadow":"0 0.125vw 0.375vw rgba(0, 0, 0, 0.05)"}),
+                        
+                        html.Div([
+                            html.I(className="fas fa-sync-alt", style={"color":"#8b5cf6", "fontSize":"1.2vw", "marginBottom":"0.75vw"}),
+                            html.H6("Find Connections", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontSize":"1.2vw", "fontWeight":"600"}),
+                            html.P("Look for relationships between sleep quality and glucose stability over time", style={"margin":"0", "color":"#6b7280", "fontSize":"1vw", "lineHeight":"1.4"})
+                        ], style={"textAlign":"center", "padding":"1.25vw", "background":"white", "borderRadius":"0.75vw", "border":"0.0625vw solid #e5e7eb", "boxShadow":"0 0.125vw 0.375vw rgba(0, 0, 0, 0.05)"})
+                    ], style={"display":"grid", "gridTemplateColumns":"repeat(3, 1fr)", "gap":"1.25vw", "marginTop":"1vw"})
+                    
+                ], style={"background":"linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", "padding":"2vw", "borderRadius":"1.25vw", "border":"0.125vw solid #e2e8f0", "marginTop":"1.5vw"})
             ])
         if tab == "meals":
             mj = requests.get("http://localhost:8000/api/meals", params={"session_id": sid}).json()
@@ -1887,10 +2033,10 @@ def build_dash_app():
                     "border": "0.125vw solid #e2e8f0",
                     "backgroundColor": "#ffffff",
                     "fontFamily": "'Inter', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-                    "overflow": "hidden",
+                    "overflow": "visible",
                     "margin": "1.5vw 0",
                     "minWidth": "100%",
-                    "maxWidth": "100%"
+                    "width": "100%"
                 },
                 style_header={
                     "backgroundColor": "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)",
@@ -2110,8 +2256,8 @@ def build_dash_app():
                         "fontFamily": "'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
                     }
                 ),
-                table
-            ], style={"background": "white", "borderRadius": "1vw", "overflow": "hidden", "boxShadow": "0 0.5vw 1.5vw rgba(0, 0, 0, 0.1)", "padding": "1.5vw"})
+                html.Div([table], className="meals-table-container")
+            ], style={"background": "white", "borderRadius": "1vw", "overflow": "visible", "boxShadow": "0 0.5vw 1.5vw rgba(0, 0, 0, 0.1)", "padding": "1.5vw"})
             
             return html.Div([
                 controls,
