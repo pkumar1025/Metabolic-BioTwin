@@ -10,3 +10,4 @@ pydantic==2.8.2
 python-multipart==0.0.9
 pyarrow==21.0.0
 requests==2.31.0
+google-genai>=1.0.0

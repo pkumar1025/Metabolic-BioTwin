@@ -24,20 +24,19 @@ def discover_hidden_correlations(daily: pd.DataFrame, meals: pd.DataFrame, min_c
     meals['date'] = pd.to_datetime(meals['date'])
     daily['date'] = pd.to_datetime(daily['date'])
     
-    # Create daily meal aggregations
-    daily_meals = meals.groupby('date').agg({
-        'carbs_g': 'sum',
-        'protein_g': 'sum', 
-        'fat_g': 'sum',
-        'fiber_g': 'sum',
-        'late_meal': 'sum',
-        'post_meal_walk10': 'sum',
-        'meal_auc': 'mean',
-        'meal_peak': 'mean'
-    }).reset_index()
-    
-    # Merge with daily health data
-    combined = daily.merge(daily_meals, on='date', how='inner')
+    if "date" not in meals.columns:
+        return []
+    agg_spec = {}
+    for col in ["carbs_g", "protein_g", "fat_g", "fiber_g", "late_meal", "post_meal_walk10"]:
+        if col in meals.columns:
+            agg_spec[col] = "sum"
+    for col in ["meal_auc", "meal_peak"]:
+        if col in meals.columns:
+            agg_spec[col] = "mean"
+    if not agg_spec:
+        return []
+    daily_meals = meals.groupby("date").agg(agg_spec).reset_index()
+    combined = daily.merge(daily_meals, on="date", how="inner")
     
     # Define metric groups for correlation analysis
     health_metrics = ['sleep_hours', 'hrv', 'rhr', 'fg_fast_mgdl', 'steps', 'workout_min']

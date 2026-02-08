@@ -173,39 +173,45 @@ def _get_health_grade(score: float) -> str:
         return "D"
 
 def _calculate_nutrition_score(meals: pd.DataFrame) -> Dict:
-    """Calculate nutrition quality score"""
+    """Calculate nutrition quality score. Uses only columns that exist; no placeholders."""
     if len(meals) == 0:
         return {"error": "No meal data"}
-    
-    # Calculate daily averages
-    daily_nutrition = meals.groupby('date').agg({
-        'carbs_g': 'sum',
-        'protein_g': 'sum',
-        'fat_g': 'sum',
-        'fiber_g': 'sum',
-        'late_meal': 'sum',
-        'post_meal_walk10': 'sum'
-    }).reset_index()
-    
-    # Nutrition quality indicators
-    avg_fiber = daily_nutrition['fiber_g'].mean()
-    late_meals_pct = (daily_nutrition['late_meal'] > 0).mean()
-    post_meal_walks_pct = (daily_nutrition['post_meal_walk10'] > 0).mean()
-    
-    # Score components
-    fiber_score = max(0, min(100, avg_fiber / 25 * 100))  # Target: 25g fiber
-    timing_score = max(0, 100 - late_meals_pct * 100)  # Penalty for late meals
-    activity_score = post_meal_walks_pct * 100  # Bonus for post-meal walks
-    
-    overall_nutrition_score = (fiber_score + timing_score + activity_score) / 3
-    
-    return {
-        'score': round(overall_nutrition_score, 1),
-        'fiber_score': round(fiber_score, 1),
-        'timing_score': round(timing_score, 1),
-        'activity_score': round(activity_score, 1),
-        'interpretation': _interpret_nutrition_score(overall_nutrition_score)
-    }
+    if "date" not in meals.columns:
+        return {"error": "Meals must have a date column for nutrition score"}
+
+    agg_map = {}
+    for col in ["carbs_g", "protein_g", "fat_g", "fiber_g", "late_meal", "post_meal_walk10"]:
+        if col in meals.columns:
+            agg_map[col] = "sum"
+    if not agg_map:
+        return {"error": "Meals need at least one of: carbs_g, protein_g, fat_g, fiber_g, late_meal, post_meal_walk10"}
+
+    daily_nutrition = meals.groupby("date").agg(agg_map).reset_index()
+    components = []
+    out = {}
+
+    if "fiber_g" in daily_nutrition.columns:
+        avg_fiber = daily_nutrition["fiber_g"].mean()
+        fiber_score = max(0, min(100, avg_fiber / 25 * 100))
+        components.append(fiber_score)
+        out["fiber_score"] = round(fiber_score, 1)
+    if "late_meal" in daily_nutrition.columns:
+        late_meals_pct = (daily_nutrition["late_meal"] > 0).mean()
+        timing_score = max(0, 100 - late_meals_pct * 100)
+        components.append(timing_score)
+        out["timing_score"] = round(timing_score, 1)
+    if "post_meal_walk10" in daily_nutrition.columns:
+        post_meal_walks_pct = (daily_nutrition["post_meal_walk10"] > 0).mean()
+        activity_score = post_meal_walks_pct * 100
+        components.append(activity_score)
+        out["activity_score"] = round(activity_score, 1)
+
+    if not components:
+        return {"error": "Insufficient meal columns for nutrition score"}
+    overall_nutrition_score = sum(components) / len(components)
+    out["score"] = round(overall_nutrition_score, 1)
+    out["interpretation"] = _interpret_nutrition_score(overall_nutrition_score)
+    return out
 
 def _interpret_nutrition_score(score: float) -> str:
     if score >= 80:

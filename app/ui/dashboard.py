@@ -1205,11 +1205,12 @@ def build_dash_app():
                         html.I(className="fas fa-heartbeat", style={"fontSize":"8vw", "color":"#10b981", "marginRight":"2.5vw", "marginBottom":"1vw", "animation":"pulse 2s ease-in-out infinite"}),
                 html.Div([
                     html.H1("Metabolic BioTwin", className="header-compact"),
-                    html.P("Your Personal Health Intelligence Platform", className="header-compact tagline"),
+                    html.P("Personal Metabolic Decision Engine — glucose & prediabetes", className="header-compact tagline"),
                         ])
                     ], className="flex-center"),
                 ], className="text-center", style={"position":"relative", "zIndex":"1"}),
                 dcc.Store(id="session-id", data=None),
+                dcc.Store(id="uploaded-files-store", data=None),
             ], className="header"),
 
             # Problem Statement & Solution
@@ -1315,6 +1316,7 @@ def build_dash_app():
                                     html.Span("Try It Now", style={"fontSize":"1.75vw", "fontWeight":"600", "color":"#059669"})
                                 ], style={"marginBottom":"0.625vw", "display":"flex", "alignItems":"center", "justifyContent":"center"}),
                                 html.Button("SAMPLE WITH DEMO DATA", id="btn-demo", className="btn-primary"),
+                                html.Button("PROCESS UPLOADED DATA", id="btn-process-upload", className="btn-primary", style={"marginTop":"0.5vw"}),
                                 html.Div([
                                     html.I(className="fas fa-spinner fa-spin", style={"fontSize":"1.125vw", "color":"#10b981", "marginRight":"0.75vw"}),
                                     html.Span("Loading...", style={"fontSize":"0.9rem", "color":"#6b7280"})
@@ -1377,41 +1379,33 @@ def build_dash_app():
     ])
 
     @callback(
-        Output("upload-status","children"),
+        [Output("upload-status","children"), Output("uploaded-files-store","data")],
         Input("upload-data","contents"),
         prevent_initial_call=True
     )
     def handle_file_upload(contents):
         if not contents:
-            return ""
-        
+            return "", None
         import base64
         import io
         import pandas as pd
-        
         try:
-            # Process uploaded files
-            files_processed = []
-            for content in contents:
-                content_type, content_string = content.split(',')
+            contents_list = contents if isinstance(contents, list) else [contents]
+            files_for_api = []
+            for i, content in enumerate(contents_list):
+                content_type, content_string = content.split(",", 1)
                 decoded = base64.b64decode(content_string)
-                
-                # Try to read as CSV
-                df = pd.read_csv(io.StringIO(decoded.decode('utf-8')))
-                files_processed.append({
-                    'rows': len(df),
-                    'columns': list(df.columns)
-                })
-            
+                csv_str = decoded.decode("utf-8")
+                df = pd.read_csv(io.StringIO(csv_str))
+                files_for_api.append({"filename": f"upload_{i}.csv", "content": csv_str})
             return html.Div([
-                create_status_message("fa-check-circle", f"Successfully uploaded {len(files_processed)} file(s)", "success"),
+                create_status_message("fa-check-circle", f"Uploaded {len(files_for_api)} file(s). Click 'Process uploaded data' to analyze.", "success"),
                 html.Div([
-                    html.P("Files ready for processing. Click 'Get Started with Demo Data' to see the system in action.", className="status-info-text")
+                    html.P("Then click 'PROCESS UPLOADED DATA' above to run insights on your CSVs.", className="status-info-text")
                 ], className="status-info")
-            ])
-            
+            ]), files_for_api
         except Exception as e:
-            return create_status_message("fa-exclamation-triangle", f"Error processing files: {str(e)}", "error")
+            return create_status_message("fa-exclamation-triangle", f"Error processing files: {str(e)}", "error"), None
 
     @callback(
         [Output("session-id","data"), Output("ingest-status","children"), Output("loading-indicator","style")],
@@ -1436,12 +1430,54 @@ def build_dash_app():
             # Hide loading indicator and show success
             loading_style_hidden = {"display":"none"}
 
-            return js["session_id"], html.Div([
+            status_children = [
                 html.Div("Loaded demo data:", style={"marginBottom": "0.25vw"}),
                 html.Div(f"{js['rows_daily']} days, {js['rows_meals']} meals")
-            ]), loading_style_hidden
+            ]
+            for w in js.get("warnings", []):
+                status_children.append(html.Div([
+                    html.Span("⚠ ", style={"color": "#b45309"}),
+                    html.Span(w, style={"fontSize": "0.9em", "color": "#92400e"})
+                ], style={"marginTop": "0.5vw", "textAlign": "left"}))
+            return js["session_id"], html.Div(status_children), loading_style_hidden
         except Exception as e:
             return None, f"Error loading demo data: {str(e)}", {"display":"none"}
+
+    @callback(
+        [Output("session-id","data"), Output("ingest-status","children"), Output("loading-indicator","style")],
+        [Input("btn-process-upload","n_clicks")],
+        [State("uploaded-files-store","data")],
+        prevent_initial_call=True
+    )
+    def process_uploaded_data(n_clicks, files_store):
+        if n_clicks is None or n_clicks == 0:
+            return None, "", {"display":"none"}
+        if not files_store or len(files_store) == 0:
+            return None, html.Div(["Upload CSV files first (drag & drop above)."], style={"color":"#b45309"}), {"display":"none"}
+        loading_style = {"display":"flex", "marginLeft":"0.75vw", "alignItems":"center"}
+        import time
+        time.sleep(0.5)
+        try:
+            r = requests.post("http://localhost:8000/api/ingest/upload", json=files_store)
+            r.raise_for_status()
+            js = r.json()
+            loading_style_hidden = {"display":"none"}
+            types_str = ", ".join(js.get("data_types_processed", [])) or "—"
+            status_children = [
+                html.Div("Processed your data:", style={"marginBottom":"0.25vw"}),
+                html.Div(f"{js.get('rows_daily', 0)} days · {types_str}"),
+            ]
+            for w in js.get("warnings", []):
+                status_children.append(html.Div([
+                    html.Span("⚠ ", style={"color":"#b45309"}),
+                    html.Span(w, style={"fontSize":"0.9em", "color":"#92400e"})
+                ], style={"marginTop":"0.5vw", "textAlign":"left"}))
+            return js["session_id"], html.Div(status_children), loading_style_hidden
+        except requests.exceptions.HTTPError as e:
+            err = e.response.json().get("detail", str(e)) if e.response else str(e)
+            return None, html.Div([f"Server error: {err}"], style={"color":"#dc2626"}), {"display":"none"}
+        except Exception as e:
+            return None, html.Div([f"Error: {str(e)}"], style={"color":"#dc2626"}), {"display":"none"}
 
     @callback(
         Output("processing-section", "style"),
@@ -1940,7 +1976,27 @@ def build_dash_app():
             ])
         if tab == "meals":
             mj = requests.get("http://localhost:8000/api/meals", params={"session_id": sid}).json()
-            
+            ij = requests.get("http://localhost:8000/api/insights", params={"session_id": sid}).json()
+            hs = requests.get("http://localhost:8000/api/health-score", params={"session_id": sid}).json()
+            n_meals = len(mj.get("meals", []))
+            dq = ij.get("data_quality", {})
+            completeness = dq.get("data_completeness", {})
+            meal_pct = round(completeness.get("meal_data", 0)) if isinstance(completeness.get("meal_data"), (int, float)) else 0
+            ai_m = ij.get("ai_metrics", {})
+            n_causal = ai_m.get("causal_effects_found", 0)
+            n_corr = ai_m.get("correlations_discovered", 0)
+            pattern_line = f"{n_causal} causal, {n_corr} correlation insights from your data"
+            if ij.get("cards"):
+                for c in ij["cards"]:
+                    if c.get("type") == "correlation" and c.get("id") == "late_peak" and c.get("r") is not None:
+                        pattern_line = f"Late meals linked to higher peaks (r={c['r']}, n={c.get('n', '—')})"
+                        break
+                    if c.get("type") == "causal_uplift" and c.get("effect_pct") is not None:
+                        ep = round(float(c["effect_pct"]) * 100)
+                        pattern_line = f"Pattern: {c.get('title', 'Effect')[:40]} (~{ep}% from your data)"
+                        break
+            n_recs = len(hs.get("recommendations", []))
+
             # Transform data for better readability
             if mj["meals"]:
                 for meal in mj["meals"]:
@@ -2231,15 +2287,15 @@ def build_dash_app():
                 html.Div([
                     html.Div([
                         html.H6("AI Analysis", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"800", "fontSize":"1.125vw", "textTransform":"uppercase", "letterSpacing":"0.03vw"}),
-                        html.P("Patterns detected: Late meals → 23% higher glucose spikes", style={"margin":"0", "color":"#059669", "fontSize":"0.875vw", "fontWeight":"700"})
+                        html.P(pattern_line, style={"margin":"0", "color":"#059669", "fontSize":"0.875vw", "fontWeight":"700"})
                     ], style={"flex":"1", "padding":"1.25vw 1.5vw", "background":"linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)", "borderRadius":"1vw", "border":"0.125vw solid #bbf7d0", "boxShadow":"0 0.25vw 0.75vw rgba(16, 185, 129, 0.1)"}),
                     html.Div([
                         html.H6("Data Quality", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"800", "fontSize":"1.125vw", "textTransform":"uppercase", "letterSpacing":"0.03vw"}),
-                        html.P("237 meals analyzed • 94% completeness", style={"margin":"0", "color":"#3b82f6", "fontSize":"0.875vw", "fontWeight":"700"})
+                        html.P(f"{n_meals} meals analyzed • {meal_pct}% completeness", style={"margin":"0", "color":"#3b82f6", "fontSize":"0.875vw", "fontWeight":"700"})
                     ], style={"flex":"1", "padding":"1.25vw 1.5vw", "background":"linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)", "borderRadius":"1vw", "border":"0.125vw solid #bfdbfe", "boxShadow":"0 0.25vw 0.75vw rgba(59, 130, 246, 0.1)"}),
                     html.Div([
                         html.H6("Actionable", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"800", "fontSize":"1.125vw", "textTransform":"uppercase", "letterSpacing":"0.03vw"}),
-                        html.P("3 personalized recommendations generated", style={"margin":"0", "color":"#7c3aed", "fontSize":"0.875vw", "fontWeight":"700"})
+                        html.P(f"{n_recs} recommendations from health score • see AI Insights for data-driven interventions", style={"margin":"0", "color":"#7c3aed", "fontSize":"0.875vw", "fontWeight":"700"})
                     ], style={"flex":"1", "padding":"1.25vw 1.5vw", "background":"linear-gradient(135deg, #faf5ff 0%, #f3e8ff 100%)", "borderRadius":"1vw", "border":"0.125vw solid #d8b4fe", "boxShadow":"0 0.25vw 0.75vw rgba(124, 58, 237, 0.1)"})
                 ], style={"display":"flex", "gap":"0.5vw", "marginBottom":"0.75vw"})
             ])
@@ -2324,7 +2380,14 @@ def build_dash_app():
             ])
             
             cards = [ai_showcase]
+            if ij.get("insufficient_data") and ij.get("insufficient_data_message"):
+                cards.append(html.Div([
+                    html.H4("Data required for full insights", style={"margin":"0 0 0.5vw 0", "color":"#b45309", "fontWeight":"700", "fontSize":"1.3vw"}),
+                    html.P(ij["insufficient_data_message"], style={"margin":"0", "color":"#374151", "fontSize":"1.1vw", "lineHeight":"1.5"}),
+                ], className="insight-card", style={"borderLeft":"4px solid #f59e0b", "background":"#fffbeb"}))
             for c in ij["cards"]:
+                if c.get("type") == "data_requirement":
+                    continue  # Already shown via insufficient_data_message banner above
                 # Determine card class based on effect
                 card_class = "insight-card"
                 if c["type"] == "causal_uplift":
@@ -2482,7 +2545,8 @@ def build_dash_app():
                 return html.Div([
                     overall_card,
                     html.Div(score_cards, style={"display":"grid", "gridTemplateColumns":"repeat(auto-fit, minmax(200px, 1fr))", "gap":"16px", "margin":"20px 0"}),
-                    html.H3("Personalized Recommendations", style={"margin":"20px 0 16px 0", "fontSize":"1.5rem", "fontWeight":"700"}),
+                    html.H3("Recommendations (from score thresholds)", style={"margin":"20px 0 4px 0", "fontSize":"1.5rem", "fontWeight":"700"}),
+                    html.P("Rule-based by your health scores. For data-driven interventions, see the AI Insights tab.", style={"margin":"0 0 16px 0", "fontSize":"0.9rem", "color":"#6b7280"}),
                     html.Div(rec_cards)
                 ])
             except Exception as e:
@@ -2491,114 +2555,116 @@ def build_dash_app():
         if tab == "predictions":
             try:
                 pred = requests.get("http://localhost:8000/api/predictions", params={"session_id": sid}).json()
-                
-                # Enhanced AI Forecasting Dashboard
+                gp = pred.get("glucose_prediction") or {}
+                si = pred.get("sleep_impact") or {}
+                hf = pred.get("health_forecast") or {}
+
                 cards = []
-                
-                # 1. Real-Time Metabolic Forecast
+
+                # 1. Forecast cards from real API data
+                fg_forecast = hf.get("fg_fast_mgdl") if isinstance(hf, dict) and "error" not in hf else {}
+                fg_current = fg_forecast.get("current_value")
+                fg_trend = fg_forecast.get("trend")
+                fg_next = None
+                if fg_forecast.get("forecast"):
+                    fg_next = fg_forecast["forecast"][0].get("predicted_value")
+
+                tomorrow_glucose_content = []
+                if "error" in gp and "error" in si and (not fg_next and "error" in hf):
+                    tomorrow_glucose_content = [html.P(gp.get("error") or si.get("error") or "No session data.", style={"margin":"0","color":"#6b7280","fontSize":"1vw"})]
+                else:
+                    if fg_next is not None:
+                        tomorrow_glucose_content.append(html.H3(f"{round(fg_next, 1)} mg/dL", style={"margin":"0 0 0.25vw 0", "color":"#1f2937", "fontWeight":"700", "fontSize":"1.8vw"}))
+                        if fg_current is not None:
+                            diff = fg_next - fg_current
+                            trend_label = f"{'+' if diff >= 0 else ''}{round(diff, 1)} vs current"
+                            tomorrow_glucose_content.append(html.P(trend_label, style={"margin":"0 0 0.5vw 0", "color":"#6b7280", "fontSize":"0.8vw"}))
+                    else:
+                        tomorrow_glucose_content.append(html.P("Need 14+ days of data for forecast.", style={"margin":"0","color":"#6b7280","fontSize":"0.9vw"}))
+
+                sleep_scenarios = si.get("scenario_predictions") or []
+                sleep_r2 = si.get("r2_score")
+                sleep_content = []
+                if si.get("error"):
+                    sleep_content.append(html.P(si["error"], style={"margin":"0","color":"#6b7280","fontSize":"0.9vw"}))
+                elif sleep_scenarios:
+                    s7 = next((s for s in sleep_scenarios if s.get("sleep_hours") == 7), sleep_scenarios[0])
+                    sleep_content.append(html.H3(f"{s7.get('sleep_hours', '—')}h → {round(s7.get('predicted_fg', 0), 1)} mg/dL FG", style={"margin":"0 0 0.25vw 0", "color":"#1f2937", "fontWeight":"700", "fontSize":"1.5vw"}))
+                    sleep_content.append(html.P("Next-day fasting glucose (7h sleep)", style={"margin":"0 0 0.5vw 0", "color":"#6b7280", "fontSize":"0.8vw"}))
+                    if sleep_r2 is not None:
+                        sleep_content.append(html.Span(f"R²: {round(sleep_r2, 2)}", style={"fontSize":"0.7vw", "color":"#059669", "fontWeight":"500"}))
+                else:
+                    sleep_content.append(html.P("Need 14+ days for sleep-impact model.", style={"margin":"0","color":"#6b7280","fontSize":"0.9vw"}))
+
+                trend_content = []
+                if fg_current is not None and fg_trend is not None:
+                    trend_content.append(html.H3(f"{round(fg_current, 1)} mg/dL", style={"margin":"0 0 0.25vw 0", "color":"#1f2937", "fontWeight":"700", "fontSize":"1.8vw"}))
+                    trend_content.append(html.P(f"7-day trend: {round(fg_trend, 2):+.2f}", style={"margin":"0 0 0.5vw 0", "color":"#6b7280", "fontSize":"0.8vw"}))
+                else:
+                    trend_content.append(html.P("Need 14+ days for trend.", style={"margin":"0","color":"#6b7280","fontSize":"0.9vw"}))
+
+                card_style = {"padding":"1.25vw", "background":"#f8fafc", "borderRadius":"0.75vw", "border":"0.0625vw solid #e2e8f0", "textAlign":"center", "minHeight":"10vw", "display":"flex", "flexDirection":"column", "justifyContent":"space-between"}
                 cards.append(html.Div([
                     html.Div([
-                        html.H4("AI Metabolic Forecast", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"700", "fontSize":"2.2vw"}),
-                        html.P("Predictive analysis based on your metabolic patterns", style={"margin":"0 0 1.25vw 0", "color":"#6b7280", "fontSize":"1.2vw"})
+                        html.H4("Metabolic forecast", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"700", "fontSize":"2.2vw"}),
+                        html.P("From your data (decision support only)", style={"margin":"0 0 1.25vw 0", "color":"#6b7280", "fontSize":"1.2vw"})
                     ], style={"textAlign":"center", "marginBottom":"1.5vw"}),
-                    
-                    # Forecast Cards Grid
                     html.Div([
-                        html.Div([
-                            html.Div([
-                                html.H5("Tomorrow's Glucose", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
-                                html.H3("142 mg/dL", style={"margin":"0 0 0.25vw 0", "color":"#dc2626", "fontWeight":"700", "fontSize":"1.8vw"}),
-                                html.P("+15% vs baseline", style={"margin":"0 0 0.5vw 0", "color":"#dc2626", "fontSize":"0.8vw"}),
-                                html.Div([
-                                    html.Span("Confidence: 87%", style={"fontSize":"0.7vw", "color":"#059669", "fontWeight":"500"})
-                                ], style={"background":"#f0fdf4", "padding":"0.25vw 0.5vw", "borderRadius":"0.75vw", "display":"inline-block"})
-                            ], style={"padding":"1.25vw", "background":"linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%)", "borderRadius":"0.75vw", "border":"0.0625vw solid #fecaca", "textAlign":"center", "height":"12vw", "display":"flex", "flexDirection":"column", "justifyContent":"space-between"})
-                        ], style={"flex":"1", "minHeight":"12vw"}),
-                        
-                        html.Div([
-                            html.Div([
-                                html.H5("Sleep Impact", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
-                                html.H3("6.2 hours", style={"margin":"0 0 0.25vw 0", "color":"#f59e0b", "fontWeight":"700", "fontSize":"1.8vw"}),
-                                html.P("Metabolic recovery: 73%", style={"margin":"0 0 0.5vw 0", "color":"#f59e0b", "fontSize":"0.8vw"}),
-                                html.Div([
-                                    html.Span("Confidence: 92%", style={"fontSize":"0.7vw", "color":"#059669", "fontWeight":"500"})
-                                ], style={"background":"#f0fdf4", "padding":"0.25vw 0.5vw", "borderRadius":"0.75vw", "display":"inline-block"})
-                            ], style={"padding":"1.25vw", "background":"linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)", "borderRadius":"0.75vw", "border":"0.0625vw solid #fde68a", "textAlign":"center", "height":"12vw", "display":"flex", "flexDirection":"column", "justifyContent":"space-between"})
-                        ], style={"flex":"1", "minHeight":"12vw"}),
-                        
-                        html.Div([
-                            html.Div([
-                                html.H5("Anomaly Risk", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
-                                html.H3("Low", style={"margin":"0 0 0.25vw 0", "color":"#059669", "fontWeight":"700", "fontSize":"1.8vw"}),
-                                html.P("Next 3 days: 12%", style={"margin":"0 0 0.5vw 0", "color":"#059669", "fontSize":"0.8vw"}),
-                                html.Div([
-                                    html.Span("Model: 94% accurate", style={"fontSize":"0.7vw", "color":"#059669", "fontWeight":"500"})
-                                ], style={"background":"#f0fdf4", "padding":"0.25vw 0.5vw", "borderRadius":"0.75vw", "display":"inline-block"})
-                            ], style={"padding":"1.25vw", "background":"linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%)", "borderRadius":"0.75vw", "border":"0.0625vw solid #bbf7d0", "textAlign":"center", "height":"12vw", "display":"flex", "flexDirection":"column", "justifyContent":"space-between"})
-                        ], style={"flex":"1", "minHeight":"12vw"})
+                        html.Div([html.H5("Tomorrow's fasting glucose", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"})] + tomorrow_glucose_content, style={**card_style}),
+                        html.Div([html.H5("Sleep → next-day FG", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"})] + sleep_content, style={**card_style}),
+                        html.Div([html.H5("Current FG & trend", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"})] + trend_content, style={**card_style})
                     ], style={"display":"flex", "gap":"1vw", "marginBottom":"1.5vw"})
                 ], className="insight-card", style={"marginBottom":"20px"}))
-                
-                # 2. AI Intervention Recommendations
+
+                # 2. Interventions: point to AI Insights (no hardcoded numbers)
                 cards.append(html.Div([
-                    html.H4("AI-Powered Interventions", style={"margin":"0 0 1vw 0", "color":"#1f2937", "fontWeight":"700", "fontSize":"2vw"}),
-                    html.Div([
-                        html.Div([
-                            html.Div([
-                                html.H6("Tonight's Sleep Optimization", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
-                                html.P("Sleep 7.5 hours to reduce tomorrow's glucose spike by 23%", style={"margin":"0 0 0.75vw 0", "color":"#374151", "fontSize":"0.9vw"}),
-                                html.Div([
-                                    html.Span("Expected Impact: -15 mg/dL", style={"fontSize":"0.7vw", "color":"#059669", "fontWeight":"500", "background":"#f0fdf4", "padding":"0.25vw 0.5vw", "borderRadius":"0.5vw"})
-                                ])
-                            ], style={"padding":"1vw", "background":"#f8fafc", "borderRadius":"0.5vw", "border":"0.0625vw solid #e2e8f0", "height":"8vw", "display":"flex", "flexDirection":"column", "justifyContent":"space-between"})
-                        ], style={"flex":"1", "minHeight":"8vw"}),
-                        
-                        html.Div([
-                            html.Div([
-                                html.H6("Post-Meal Activity", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
-                                html.P("Take a 10-minute walk after dinner to improve glucose response", style={"margin":"0 0 0.75vw 0", "color":"#374151", "fontSize":"0.9vw"}),
-                                html.Div([
-                                    html.Span("Success Rate: 78%", style={"fontSize":"0.7vw", "color":"#059669", "fontWeight":"500", "background":"#f0fdf4", "padding":"0.25vw 0.5vw", "borderRadius":"0.5vw"})
-                                ])
-                            ], style={"padding":"1vw", "background":"#f8fafc", "borderRadius":"0.5vw", "border":"0.0625vw solid #e2e8f0", "height":"8vw", "display":"flex", "flexDirection":"column", "justifyContent":"space-between"})
-                        ], style={"flex":"1", "minHeight":"8vw"}),
-                        
-                        html.Div([
-                            html.Div([
-                                html.H6("Meal Timing", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
-                                html.P("Eat dinner before 7 PM to optimize metabolic recovery", style={"margin":"0 0 0.75vw 0", "color":"#374151", "fontSize":"0.9vw"}),
-                                html.Div([
-                                    html.Span("Confidence: 85%", style={"fontSize":"0.7vw", "color":"#059669", "fontWeight":"500", "background":"#f0fdf4", "padding":"0.25vw 0.5vw", "borderRadius":"0.5vw"})
-                                ])
-                            ], style={"padding":"1vw", "background":"#f8fafc", "borderRadius":"0.5vw", "border":"0.0625vw solid #e2e8f0", "height":"8vw", "display":"flex", "flexDirection":"column", "justifyContent":"space-between"})
-                        ], style={"flex":"1", "minHeight":"8vw"})
-                    ], style={"display":"flex", "gap":"0.75vw"})
+                    html.H4("Interventions", style={"margin":"0 0 1vw 0", "color":"#1f2937", "fontWeight":"700", "fontSize":"2vw"}),
+                    html.P("Personalized, data-driven interventions (sleep, post-meal walk, meal timing, fasting glucose) are in the AI Insights tab, based on your causal analysis and glucose patterns.", style={"margin":"0", "color":"#374151", "fontSize":"1vw"})
                 ], className="insight-card", style={"marginBottom":"1.25vw"}))
-                
-                # 3. Model Performance Metrics
+
+                # 3. Model performance from API only
+                perf_glucose = gp.get("model_performance") or {}
+                mae = perf_glucose.get("mae")
+                r2_glucose = perf_glucose.get("r2_score")
+                n_samples = perf_glucose.get("n_samples")
+                r2_sleep = si.get("r2_score") if "error" not in si else None
+
+                gl_perf = html.P("—", style={"margin":"0", "color":"#6b7280", "fontSize":"0.9vw"})
+                if gp.get("error"):
+                    gl_perf = html.P(gp["error"], style={"margin":"0", "color":"#6b7280", "fontSize":"0.9vw"})
+                elif mae is not None and r2_glucose is not None:
+                    gl_perf = html.Div([
+                        html.P(f"MAE: {round(mae, 1)} mg/dL", style={"margin":"0 0 0.25vw 0", "color":"#059669", "fontSize":"1vw", "fontWeight":"600"}),
+                        html.P(f"R²: {round(r2_glucose, 2)} (n={n_samples})", style={"margin":"0", "color":"#6b7280", "fontSize":"0.9vw"})
+                    ])
+
+                sl_perf = html.P("—", style={"margin":"0", "color":"#6b7280", "fontSize":"0.9vw"})
+                if si.get("error"):
+                    sl_perf = html.P(si["error"], style={"margin":"0", "color":"#6b7280", "fontSize":"0.9vw"})
+                elif r2_sleep is not None:
+                    sl_perf = html.Div([
+                        html.P(f"R²: {round(r2_sleep, 2)}", style={"margin":"0 0 0.25vw 0", "color":"#059669", "fontSize":"1vw", "fontWeight":"600"}),
+                        html.P("Sleep → next-day FG", style={"margin":"0", "color":"#6b7280", "fontSize":"0.9vw"})
+                    ])
+
                 cards.append(html.Div([
-                    html.H4("AI Model Performance", style={"margin":"0 0 1vw 0", "color":"#1f2937", "fontWeight":"700", "fontSize":"2vw"}),
+                    html.H4("Model performance", style={"margin":"0 0 1vw 0", "color":"#1f2937", "fontWeight":"700", "fontSize":"2vw"}),
                     html.Div([
                         html.Div([
-                            html.H5("Glucose Prediction", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
-                            html.P("Accuracy: 87%", style={"margin":"0 0 0.25vw 0", "color":"#059669", "fontSize":"1.2vw", "fontWeight":"600"}),
-                            html.P("RMSE: 12.3 mg/dL", style={"margin":"0", "color":"#6b7280", "fontSize":"0.9vw"})
-                        ], style={"padding":"1vw", "background":"#f0fdf4", "borderRadius":"0.5vw", "border":"0.0625vw solid #bbf7d0", "textAlign":"center", "flex":"1", "height":"6vw", "display":"flex", "flexDirection":"column", "justifyContent":"space-between"}),
-                        
+                            html.H5("Glucose (meal AUC)", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
+                            gl_perf
+                        ], style={"padding":"1vw", "background":"#f0fdf4", "borderRadius":"0.5vw", "border":"0.0625vw solid #bbf7d0", "textAlign":"center", "flex":"1"}),
                         html.Div([
-                            html.H5("Sleep Impact", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
-                            html.P("Accuracy: 92%", style={"margin":"0 0 0.25vw 0", "color":"#059669", "fontSize":"1.2vw", "fontWeight":"600"}),
-                            html.P("R²: 0.89", style={"margin":"0", "color":"#6b7280", "fontSize":"0.9vw"})
-                        ], style={"padding":"1vw", "background":"#f0fdf4", "borderRadius":"0.5vw", "border":"0.0625vw solid #bbf7d0", "textAlign":"center", "flex":"1", "height":"6vw", "display":"flex", "flexDirection":"column", "justifyContent":"space-between"}),
-                        
+                            html.H5("Sleep impact", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
+                            sl_perf
+                        ], style={"padding":"1vw", "background":"#f0fdf4", "borderRadius":"0.5vw", "border":"0.0625vw solid #bbf7d0", "textAlign":"center", "flex":"1"}),
                         html.Div([
-                            html.H5("Anomaly Detection", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
-                            html.P("Precision: 94%", style={"margin":"0 0 0.25vw 0", "color":"#059669", "fontSize":"1.2vw", "fontWeight":"600"}),
-                            html.P("Recall: 89%", style={"margin":"0", "color":"#6b7280", "fontSize":"0.9vw"})
-                        ], style={"padding":"16px", "background":"#f0fdf4", "borderRadius":"8px", "border":"1px solid #bbf7d0", "textAlign":"center", "flex":"1"})
+                            html.H5("Anomaly detection", style={"margin":"0 0 0.5vw 0", "color":"#1f2937", "fontWeight":"600", "fontSize":"1vw"}),
+                            html.P("See AI Insights tab", style={"margin":"0", "color":"#6b7280", "fontSize":"0.9vw"})
+                        ], style={"padding":"1vw", "background":"#f0fdf4", "borderRadius":"0.5vw", "border":"0.0625vw solid #bbf7d0", "textAlign":"center", "flex":"1"})
                     ], style={"display":"flex", "gap":"0.75vw"})
                 ], className="insight-card"))
-                
+
                 return html.Div(cards)
             except Exception as e:
                 return html.Div(f"Error loading predictions: {str(e)}", style={"textAlign":"center","color":"#ef4444","padding":"2.5vw"})

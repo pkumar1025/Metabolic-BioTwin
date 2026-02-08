@@ -9,8 +9,30 @@ from app.api.data_processor import HealthDataProcessor
 
 router = APIRouter()
 
+# Columns required for full AI insights (causal + meal glucose); missing = alert user, no placeholders
+MEALS_REQUIRED_FOR_INSIGHTS = {"date", "meal_auc", "meal_peak", "late_meal", "post_meal_walk10"}
+
 # In-memory storage for demo sessions (no file persistence needed)
 session_data = {}
+
+
+def _ingest_warnings(meals: pd.DataFrame, daily: pd.DataFrame, is_demo: bool) -> List[str]:
+    """Return user-facing warnings when data is missing for full AI insights. No placeholders."""
+    warnings = []
+    if meals is None or len(meals) == 0:
+        return warnings
+    missing = MEALS_REQUIRED_FOR_INSIGHTS - set(meals.columns)
+    if missing:
+        warnings.append(
+            "Meals file is missing columns required for AI insights: "
+            + ", ".join(sorted(missing))
+            + ". For causal insights and predictions, upload meals with glucose metrics (e.g. from CGM) or use demo data."
+        )
+    if len(daily) < 14:
+        warnings.append(
+            "Less than 14 days of daily data. Some predictions and trends need at least 14 days."
+        )
+    return warnings
 
 @router.post("/ingest")
 async def ingest(
@@ -50,8 +72,9 @@ async def ingest(
     num_cols = [c for c in daily.columns if c != "date"]
     if num_cols:
         daily[num_cols] = daily[num_cols].interpolate(limit_direction="both")
-    
-    # Store in memory instead of files (no persistence needed for demo)
+
+    warnings = _ingest_warnings(meals, daily, is_demo=use_demo)
+    # Store in memory
     session_data[sid] = {
         "meals": meals,
         "sleep": sleep,
@@ -60,7 +83,12 @@ async def ingest(
         "daily": daily
     }
 
-    return {"session_id": sid, "rows_daily": int(len(daily)), "rows_meals": int(len(meals))}
+    return {
+        "session_id": sid,
+        "rows_daily": int(len(daily)),
+        "rows_meals": int(len(meals)),
+        "warnings": warnings,
+    }
 
 @router.post("/ingest/upload")
 async def ingest_uploaded_files(files_data: List[Dict]):
@@ -79,7 +107,9 @@ async def ingest_uploaded_files(files_data: List[Dict]):
         
         # Create daily summary
         daily = processor.create_daily_summary()
-        
+        meals_df = processed_data.get("meals", pd.DataFrame())
+        warnings = _ingest_warnings(meals_df, daily, is_demo=False)
+
         # Store processed data
         session_data[sid] = {
             **processed_data,
@@ -92,7 +122,8 @@ async def ingest_uploaded_files(files_data: List[Dict]):
             "rows_daily": int(len(daily)),
             "data_types_processed": list(processed_data.keys()),
             "quality_report": quality_report,
-            "validation_errors": processor.validation_errors
+            "validation_errors": processor.validation_errors,
+            "warnings": warnings,
         }
         
     except Exception as e:
