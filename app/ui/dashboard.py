@@ -4,10 +4,13 @@ from dash import dcc, html, callback, Input, Output, State, dash_table
 import plotly.graph_objs as go
 import pandas as pd
 
+from app.config import API_BASE_URL, MIN_DAILY_DAYS
+
 
 def build_dash_app():
     app = dash.Dash(__name__, requests_pathname_prefix="/app/")
     server = app.server
+    API_BASE = API_BASE_URL
 
     # Helper functions to reduce code duplication
     def create_status_message(icon_class, text, status_type):
@@ -1334,19 +1337,19 @@ def build_dash_app():
                                     html.A([
                                         html.I(className="fas fa-file-csv", style={"marginRight":"0.75vw", "color":"#ef4444", "fontSize":"0.875vw"}),
                                         "Vitals Data (CSV)"
-                                    ], href="http://localhost:8000/data/demo/vitals.csv", target="_blank", className="demo-file-link"),
+                                    ], href=API_BASE + "/data/demo/vitals.csv", target="_blank", className="demo-file-link"),
                                     html.A([
                                         html.I(className="fas fa-file-csv", style={"marginRight":"0.5vw", "color":"#3b82f6"}),
                                         "Sleep Data (CSV)"
-                                    ], href="http://localhost:8000/data/demo/sleep.csv", target="_blank", className="demo-file-link"),
+                                    ], href=API_BASE + "/data/demo/sleep.csv", target="_blank", className="demo-file-link"),
                                     html.A([
                                         html.I(className="fas fa-file-csv", style={"marginRight":"0.5vw", "color":"#10b981"}),
                                         "Meals Data (CSV)"
-                                    ], href="http://localhost:8000/data/demo/meals.csv", target="_blank", className="demo-file-link"),
+                                    ], href=API_BASE + "/data/demo/meals.csv", target="_blank", className="demo-file-link"),
                                     html.A([
                                         html.I(className="fas fa-file-csv", style={"marginRight":"0.5vw", "color":"#f59e0b"}),
                                         "Activity Data (CSV)"
-                                    ], href="http://localhost:8000/data/demo/activity.csv", target="_blank", className="demo-file-link")
+                                    ], href=API_BASE + "/data/demo/activity.csv", target="_blank", className="demo-file-link")
                                 ], className="demo-files-grid")
                             ], className="demo-files-section")
                         ], className="demo-section")
@@ -1425,7 +1428,7 @@ def build_dash_app():
         
         # Make API call
         try:
-            r = requests.post("http://localhost:8000/api/ingest", data={"use_demo": "true"})
+            r = requests.post(API_BASE + "/api/ingest", data={"use_demo": "true"})
             js = r.json()
             # Hide loading indicator and show success
             loading_style_hidden = {"display":"none"}
@@ -1458,7 +1461,7 @@ def build_dash_app():
         import time
         time.sleep(0.5)
         try:
-            r = requests.post("http://localhost:8000/api/ingest/upload", json=files_store)
+            r = requests.post(API_BASE + "/api/ingest/upload", json=files_store)
             r.raise_for_status()
             js = r.json()
             loading_style_hidden = {"display":"none"}
@@ -1523,7 +1526,7 @@ def build_dash_app():
         
         try:
             # Get timeline data for summary
-            tj = requests.get("http://localhost:8000/api/timeline", params={"session_id": sid}).json()
+            tj = requests.get(API_BASE + "/api/timeline", params={"session_id": sid}).json()
             
             # Calculate summary stats
             fg_values = [float(x) for x in tj["fg_fast_mgdl"] if x and x != 0]
@@ -1533,24 +1536,24 @@ def build_dash_app():
             avg_sleep = round(sum(sleep_values) / len(sleep_values), 1) if sleep_values else 0
             
             # Get insights data with AI metrics
-            ij = requests.get("http://localhost:8000/api/insights", params={"session_id": sid}).json()
+            ij = requests.get(API_BASE + "/api/insights", params={"session_id": sid}).json()
             insights_count = len(ij.get("cards", []))
             ai_metrics = ij.get("ai_metrics", {})
             data_quality = ij.get("data_quality", {})
             
             # Get meals count
-            mj = requests.get("http://localhost:8000/api/meals", params={"session_id": sid}).json()
+            mj = requests.get(API_BASE + "/api/meals", params={"session_id": sid}).json()
             meals_count = len(mj.get("meals", []))
             
             # Calculate trends (simple comparison of first vs last 7 days)
             fg_trend = "neutral"
             sleep_trend = "neutral"
-            if len(fg_values) >= 14:
+            if len(fg_values) >= MIN_DAILY_DAYS:
                 first_week_fg = sum(fg_values[:7]) / 7
                 last_week_fg = sum(fg_values[-7:]) / 7
                 fg_trend = "down" if last_week_fg < first_week_fg else "up" if last_week_fg > first_week_fg else "neutral"
             
-            if len(sleep_values) >= 14:
+            if len(sleep_values) >= MIN_DAILY_DAYS:
                 first_week_sleep = sum(sleep_values[:7]) / 7
                 last_week_sleep = sum(sleep_values[-7:]) / 7
                 sleep_trend = "up" if last_week_sleep > first_week_sleep else "down" if last_week_sleep < first_week_sleep else "neutral"
@@ -1641,7 +1644,7 @@ def build_dash_app():
             ])
         if tab == "timeline":
             try:
-                tj = requests.get("http://localhost:8000/api/timeline", params={"session_id": sid}).json()
+                tj = requests.get(API_BASE + "/api/timeline", params={"session_id": sid}).json()
             except:
                 return html.Div("Error loading timeline data.", style={"textAlign":"center","color":"#ef4444","padding":"2.5vw"})
             
@@ -1975,9 +1978,9 @@ def build_dash_app():
                 ], style={"background":"linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)", "padding":"2vw", "borderRadius":"1.25vw", "border":"0.125vw solid #e2e8f0", "marginTop":"1.5vw"})
             ])
         if tab == "meals":
-            mj = requests.get("http://localhost:8000/api/meals", params={"session_id": sid}).json()
-            ij = requests.get("http://localhost:8000/api/insights", params={"session_id": sid}).json()
-            hs = requests.get("http://localhost:8000/api/health-score", params={"session_id": sid}).json()
+            mj = requests.get(API_BASE + "/api/meals", params={"session_id": sid}).json()
+            ij = requests.get(API_BASE + "/api/insights", params={"session_id": sid}).json()
+            hs = requests.get(API_BASE + "/api/health-score", params={"session_id": sid}).json()
             n_meals = len(mj.get("meals", []))
             dq = ij.get("data_quality", {})
             completeness = dq.get("data_completeness", {})
@@ -2322,7 +2325,7 @@ def build_dash_app():
                 table_section
             ])
         if tab == "insights":
-            ij = requests.get("http://localhost:8000/api/insights", params={"session_id": sid}).json()
+            ij = requests.get(API_BASE + "/api/insights", params={"session_id": sid}).json()
             
             # Hackathon-focused AI showcase header
             ai_showcase = html.Div([
@@ -2482,7 +2485,7 @@ def build_dash_app():
         
         if tab == "health-score":
             try:
-                hs = requests.get("http://localhost:8000/api/health-score", params={"session_id": sid}).json()
+                hs = requests.get(API_BASE + "/api/health-score", params={"session_id": sid}).json()
                 
                 if "error" in hs:
                     return html.Div(f"Error: {hs['error']}", style={"textAlign":"center","color":"#ef4444","padding":"2.5vw"})
@@ -2542,9 +2545,13 @@ def build_dash_app():
                         html.P(rec["expected_impact"], style={"margin":"0", "color":"#059669", "fontSize":"0.85rem", "fontWeight":"500", "fontStyle":"italic"})
                     ], className="insight-card", style={"marginBottom":"16px"}))
                 
+                nutrition_note = html.Div()
+                if "nutrition" not in scores and scores:
+                    nutrition_note = html.P("Nutrition score not available — add meal data for full assessment.", style={"margin":"0 0 16px 0", "fontSize":"0.9rem", "color":"#92400e", "background":"#fffbeb", "padding":"8px 12px", "borderRadius":"8px", "border":"1px solid #f59e0b"})
                 return html.Div([
                     overall_card,
                     html.Div(score_cards, style={"display":"grid", "gridTemplateColumns":"repeat(auto-fit, minmax(200px, 1fr))", "gap":"16px", "margin":"20px 0"}),
+                    nutrition_note,
                     html.H3("Recommendations (from score thresholds)", style={"margin":"20px 0 4px 0", "fontSize":"1.5rem", "fontWeight":"700"}),
                     html.P("Rule-based by your health scores. For data-driven interventions, see the AI Insights tab.", style={"margin":"0 0 16px 0", "fontSize":"0.9rem", "color":"#6b7280"}),
                     html.Div(rec_cards)
@@ -2554,12 +2561,19 @@ def build_dash_app():
         
         if tab == "predictions":
             try:
-                pred = requests.get("http://localhost:8000/api/predictions", params={"session_id": sid}).json()
+                pred = requests.get(API_BASE + "/api/predictions", params={"session_id": sid}).json()
                 gp = pred.get("glucose_prediction") or {}
                 si = pred.get("sleep_impact") or {}
                 hf = pred.get("health_forecast") or {}
 
                 cards = []
+                fg_ok = isinstance(hf, dict) and "error" not in hf and (hf.get("fg_fast_mgdl") or {}).get("forecast")
+                all_errors = bool(gp.get("error") and si.get("error") and not fg_ok)
+                if all_errors:
+                    cards.append(html.Div([
+                        html.P("Not enough data for predictions yet.", style={"margin":"0 0 0.25vw 0", "fontWeight":"700", "fontSize":"1.1vw", "color":"#1f2937"}),
+                        html.P("Load demo data or upload CSVs with 14+ days of daily data (and meals with glucose metrics for meal-based predictions).", style={"margin":"0", "fontSize":"0.95vw", "color":"#6b7280"})
+                    ], style={"padding":"1vw 1.25vw", "marginBottom":"1vw", "background":"#fef3c7", "borderRadius":"0.75vw", "border":"0.0625vw solid #f59e0b"}))
 
                 # 1. Forecast cards from real API data
                 fg_forecast = hf.get("fg_fast_mgdl") if isinstance(hf, dict) and "error" not in hf else {}
@@ -2671,7 +2685,7 @@ def build_dash_app():
         
         if tab == "correlations":
             try:
-                corr = requests.get("http://localhost:8000/api/correlations", params={"session_id": sid}).json()
+                corr = requests.get(API_BASE + "/api/correlations", params={"session_id": sid}).json()
                 
                 hidden_correlations = corr.get("hidden_correlations", [])
                 lag_correlations = corr.get("lag_correlations", [])
@@ -2720,7 +2734,7 @@ def build_dash_app():
     def export_meals(n_clicks, sid):
         if not n_clicks:
             return dash.no_update
-        mj = requests.get("http://localhost:8000/api/meals", params={"session_id": sid}).json()
+        mj = requests.get(API_BASE + "/api/meals", params={"session_id": sid}).json()
         df = pd.DataFrame(mj["meals"]) if mj.get("meals") else pd.DataFrame()
         return dcc.send_data_frame(df.to_csv, "meals.csv", index=False)
 

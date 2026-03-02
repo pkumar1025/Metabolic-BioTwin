@@ -8,7 +8,13 @@ from app.ml.correlations import corr_with_p, discover_hidden_correlations, find_
 from app.ml.predictive import predict_glucose_response, predict_sleep_impact, generate_health_forecast
 from app.ml.health_score import calculate_metabolic_health_score, generate_personalized_recommendations
 from app.ml.llm_insights import generate_intervention_text
-from app.config import LOW_SLEEP_THRESHOLD, MIN_SAMPLES
+from app.config import (
+    LOW_SLEEP_THRESHOLD,
+    MIN_SAMPLES,
+    INSIGHTS_MEAL_COLS,
+    CONFIDENCE_DAYS_HIGH,
+    CONFIDENCE_DAYS_MODERATE,
+)
 
 router = APIRouter()
 
@@ -49,8 +55,7 @@ def meals(session_id: str):
     except KeyError:
         return {"meals": []}
 
-# Columns required for causal/correlation meal-based insights; missing = alert user, no placeholders
-INSIGHTS_MEAL_COLS = {"date", "meal_auc", "meal_peak", "late_meal", "post_meal_walk10"}
+# Daily columns required for insights (meal cols come from config.INSIGHTS_MEAL_COLS)
 INSIGHTS_DAILY_COLS = {"date", "sleep_hours", "hrv", "rhr", "fg_fast_mgdl"}
 
 
@@ -321,7 +326,7 @@ def insights(session_id: str):
             "correlations_discovered": len([c for c in cards if c.get("type") == "correlation"]),
             "causal_effects_found": len([c for c in cards if c.get("type") == "causal_uplift"]),
             "anomalies_detected": len([c for c in cards if c.get("type") == "anomaly"]),
-            "model_confidence": "high" if data_quality["data_span_days"] >= 30 else "moderate" if data_quality["data_span_days"] >= 14 else "low",
+            "model_confidence": "high" if data_quality["data_span_days"] >= CONFIDENCE_DAYS_HIGH else "moderate" if data_quality["data_span_days"] >= CONFIDENCE_DAYS_MODERATE else "low",
         },
         "insufficient_data": False,
     }

@@ -5,6 +5,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, r2_score
 from typing import Dict, List, Tuple
 
+from app.config import MIN_DAILY_DAYS, MIN_MEALS_FOR_PREDICTION
+
 def predict_glucose_response(meals: pd.DataFrame, daily: pd.DataFrame) -> Dict:
     """
     Predict glucose response based on meal composition and recent health patterns
@@ -65,7 +67,7 @@ def predict_glucose_response(meals: pd.DataFrame, daily: pd.DataFrame) -> Dict:
         features.append(meal_features + health_features + time_features)
         targets.append(meal['meal_auc'])
     
-    if len(features) < 20:
+    if len(features) < MIN_MEALS_FOR_PREDICTION:
         return {"error": "Insufficient data for prediction"}
     
     X = np.array(features)
@@ -108,7 +110,7 @@ def predict_sleep_impact(daily: pd.DataFrame) -> Dict:
     """
     Predict how sleep quality will impact next-day metrics
     """
-    if len(daily) < 14:
+    if len(daily) < MIN_DAILY_DAYS:
         return {"error": "Insufficient data for prediction"}
     
     # Create lagged features
@@ -164,7 +166,7 @@ def generate_health_forecast(daily: pd.DataFrame, days_ahead: int = 7) -> Dict:
     """
     Generate health forecast based on current trends
     """
-    if len(daily) < 14:
+    if len(daily) < MIN_DAILY_DAYS:
         return {"error": "Insufficient data for forecasting"}
     
     daily_sorted = daily.sort_values('date').copy()

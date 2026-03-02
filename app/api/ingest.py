@@ -4,13 +4,10 @@ import uuid
 import io
 import base64
 from typing import List, Dict
-from app.config import STORE_DIR, DEMO_DIR
+from app.config import DEMO_DIR, INSIGHTS_MEAL_COLS, MIN_DAILY_DAYS, ALLOWED_DEMO_FILES
 from app.api.data_processor import HealthDataProcessor
 
 router = APIRouter()
-
-# Columns required for full AI insights (causal + meal glucose); missing = alert user, no placeholders
-MEALS_REQUIRED_FOR_INSIGHTS = {"date", "meal_auc", "meal_peak", "late_meal", "post_meal_walk10"}
 
 # In-memory storage for demo sessions (no file persistence needed)
 session_data = {}
@@ -21,16 +18,16 @@ def _ingest_warnings(meals: pd.DataFrame, daily: pd.DataFrame, is_demo: bool) ->
     warnings = []
     if meals is None or len(meals) == 0:
         return warnings
-    missing = MEALS_REQUIRED_FOR_INSIGHTS - set(meals.columns)
+    missing = INSIGHTS_MEAL_COLS - set(meals.columns)
     if missing:
         warnings.append(
             "Meals file is missing columns required for AI insights: "
             + ", ".join(sorted(missing))
             + ". For causal insights and predictions, upload meals with glucose metrics (e.g. from CGM) or use demo data."
         )
-    if len(daily) < 14:
+    if len(daily) < MIN_DAILY_DAYS:
         warnings.append(
-            "Less than 14 days of daily data. Some predictions and trends need at least 14 days."
+            f"Less than {MIN_DAILY_DAYS} days of daily data. Some predictions and trends need at least {MIN_DAILY_DAYS} days."
         )
     return warnings
 
@@ -90,11 +87,24 @@ async def ingest(
         "warnings": warnings,
     }
 
+def _validate_files_data(files_data: List[Dict]) -> None:
+    """Raise HTTPException if files_data is invalid (non-empty list of dicts with 'content')."""
+    if not isinstance(files_data, list) or len(files_data) == 0:
+        raise HTTPException(status_code=400, detail="files_data must be a non-empty list")
+    for i, item in enumerate(files_data):
+        if not isinstance(item, dict):
+            raise HTTPException(status_code=400, detail=f"Item {i} must be a dict")
+        if "content" not in item:
+            raise HTTPException(status_code=400, detail=f"Item {i} must have 'content' key")
+
+
 @router.post("/ingest/upload")
 async def ingest_uploaded_files(files_data: List[Dict]):
     """
-    Process uploaded files with flexible schema handling
+    Process uploaded files with flexible schema handling.
+    Expects JSON body: list of { "filename": str (optional), "content": str (CSV body) }.
     """
+    _validate_files_data(files_data)
     try:
         sid = str(uuid.uuid4())
         processor = HealthDataProcessor()
@@ -163,24 +173,17 @@ async def validate_file_format(file_content: str):
 
 @router.get("/demo/{filename}")
 async def get_demo_file(filename: str):
-    """Serve demo CSV files for inspection"""
-    import os
+    """Serve demo CSV files for inspection."""
     from fastapi.responses import FileResponse
-    
-    # Validate filename to prevent directory traversal
-    allowed_files = ["meals.csv", "sleep.csv", "activity.csv", "vitals.csv"]
-    if filename not in allowed_files:
+
+    if filename not in ALLOWED_DEMO_FILES:
         raise HTTPException(status_code=404, detail="File not found")
-    
-    # Get the file path
-    file_path = os.path.join("app", "data", "demo", filename)
-    
-    if not os.path.exists(file_path):
+    file_path = DEMO_DIR / filename
+    if not file_path.exists():
         raise HTTPException(status_code=404, detail="File not found")
-    
     return FileResponse(
-        path=file_path,
+        path=str(file_path),
         media_type="text/csv",
         filename=filename,
-        headers={"Content-Disposition": f"attachment; filename={filename}"}
+        headers={"Content-Disposition": f"attachment; filename={filename}"},
     )

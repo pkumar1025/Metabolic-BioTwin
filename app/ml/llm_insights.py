@@ -2,6 +2,7 @@
 LLM-generated intervention text with strict grounding. Uses only the provided
 structured data; no invented numbers or medical claims. Falls back to None when
 API key is missing or the call fails so the caller can use interpolated text.
+Supports OpenAI (default) via OPENAI_API_KEY.
 """
 
 import json
@@ -9,7 +10,7 @@ import logging
 import re
 from typing import Any
 
-from app.config import GEMINI_API_KEY, GEMINI_MODEL
+from app.config import OPENAI_API_KEY, OPENAI_MODEL
 
 logger = logging.getLogger(__name__)
 
@@ -30,19 +31,24 @@ def generate_intervention_text(payload: dict[str, Any]) -> dict[str, str] | None
     Ask the LLM for intervention + success text from a single card's structured data.
     Returns {"intervention": "...", "success": "..."} or None on failure/missing key.
     """
-    if not GEMINI_API_KEY:
+    if not OPENAI_API_KEY:
+        return None
+    if not isinstance(payload, dict) or len(payload) == 0:
         return None
 
     try:
-        from google import genai
-        client = genai.Client(api_key=GEMINI_API_KEY)
-        contents = USER_PROMPT_TEMPLATE.format(payload=json.dumps(payload, default=str, indent=0))
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=contents,
+        from openai import OpenAI
+        client = OpenAI(api_key=OPENAI_API_KEY)
+        content = USER_PROMPT_TEMPLATE.format(payload=json.dumps(payload, default=str, indent=0))
+        response = client.chat.completions.create(
+            model=OPENAI_MODEL,
+            messages=[
+                {"role": "system", "content": "You output valid JSON only. No markdown, no extra text."},
+                {"role": "user", "content": content},
+            ],
+            response_format={"type": "json_object"},
         )
-        text = (response.text or "").strip()
-        # Strip markdown code block if present
+        text = (response.choices[0].message.content or "").strip()
         if "```" in text:
             match = re.search(r"```(?:json)?\s*([\s\S]*?)```", text)
             if match:
