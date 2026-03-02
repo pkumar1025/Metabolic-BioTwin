@@ -4,9 +4,6 @@
 
 Transform your health data into actionable, personalized insights for metabolic and glucose decisions. This is **decision support only**, not medical diagnosis or treatment.
 
-## 🎥 Demo Video
-Watch the platform in action: [Metabolic BioTwin Demo](https://drive.google.com/file/d/1qbvrvOXfvnrXi7sJ7am_7vKdCSJ3toow/view?usp=sharing)
-
 ## Quick Start
 
 ### Prerequisites
